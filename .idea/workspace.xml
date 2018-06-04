@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="27d77bb7-d6cb-49ae-8e29-f88ab8d692f2" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/application/admin/controller/AddSchedule.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/controller/AddSchedule.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/admin/model/AddSchedule.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/model/AddSchedule.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/admin/controller/AddMovie.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/admin/controller/AddMovie.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/doc/接口文档.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/接口文档.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/thinkphp" beforeDir="false" afterPath="$PROJECT_DIR$/thinkphp" afterDir="false" />
     </list>
@@ -35,10 +34,22 @@
         <entry file="file://$PROJECT_DIR$/doc/接口文档.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="-22">
-                <caret line="110" column="22" selection-start-line="110" selection-start-column="22" selection-end-line="110" selection-end-column="22" />
+              <first_editor relative-caret-position="2179">
+                <caret line="261" selection-start-line="261" selection-end-line="261" />
               </first_editor>
               <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AddMovie.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/admin/controller/AddMovie.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="627">
+              <caret line="43" column="46" selection-start-line="43" selection-start-column="38" selection-end-line="43" selection-end-column="46" />
+              <folding>
+                <element signature="e#124#145#0#PHP" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -243,11 +254,11 @@
         <option value="$PROJECT_DIR$/application/index/validate/UserRegister.php" />
         <option value="$PROJECT_DIR$/application/admin/controller/AddHall.php" />
         <option value="$PROJECT_DIR$/application/admin/model/AddMovie.php" />
-        <option value="$PROJECT_DIR$/application/admin/controller/AddMovie.php" />
         <option value="$PROJECT_DIR$/../index.html" />
         <option value="$PROJECT_DIR$/application/index/controller/Useraction.php" />
         <option value="$PROJECT_DIR$/application/admin/model/AddSchedule.php" />
         <option value="$PROJECT_DIR$/application/admin/controller/AddSchedule.php" />
+        <option value="$PROJECT_DIR$/application/admin/controller/AddMovie.php" />
         <option value="$PROJECT_DIR$/doc/接口文档.md" />
       </list>
     </option>
@@ -277,6 +288,24 @@
             <path>
               <item name="ttms" type="b2602c69:ProjectViewProjectNode" />
               <item name="ttms" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ttms" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ttms" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ttms" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ttms" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+              <item name="admin" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ttms" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ttms" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+              <item name="admin" type="462c0819:PsiDirectoryNode" />
+              <item name="controller" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ttms" type="b2602c69:ProjectViewProjectNode" />
@@ -317,12 +346,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1528070466615</updated>
-      <workItem from="1528070469441" duration="11147000" />
+      <workItem from="1528070469441" duration="11761000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="11147000" />
+    <option name="totallyTimeSpent" value="11761000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1026" extended-state="6" />
@@ -409,16 +438,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="308">
           <caret line="19" column="1" lean-forward="true" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/admin/controller/AddMovie.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="550">
-          <caret line="30" lean-forward="true" selection-start-line="30" selection-end-line="30" />
-          <folding>
-            <element signature="e#124#145#0#PHP" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -649,11 +668,21 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/controller/AddMovie.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="627">
+          <caret line="43" column="46" selection-start-line="43" selection-start-column="38" selection-end-line="43" selection-end-column="46" />
+          <folding>
+            <element signature="e#124#145#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/doc/接口文档.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="-22">
-            <caret line="110" column="22" selection-start-line="110" selection-start-column="22" selection-end-line="110" selection-end-column="22" />
+          <first_editor relative-caret-position="2179">
+            <caret line="261" selection-start-line="261" selection-end-line="261" />
           </first_editor>
           <second_editor />
         </state>

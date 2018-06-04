@@ -35,7 +35,7 @@ class AddMovie extends Controller
             $res = $addMovie->index($data);
 
             if ($res == 1) {
-                return ['success' => 'addSucc'];
+                return ['success' => 'addSuccess'];
             } else if ($res == -2){
                 return ['success' => 'dataIllegal'];
             } else if ($res == 2) {
