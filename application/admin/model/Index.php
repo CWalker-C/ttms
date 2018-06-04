@@ -17,13 +17,6 @@ class Index extends Model
 
     }
 
-
-
-    //添加演出计划
-    public function addSchedule($data)
-    {
-
-    }
 }
 
 

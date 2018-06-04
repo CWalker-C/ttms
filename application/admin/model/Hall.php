@@ -10,26 +10,20 @@ namespace app\admin\model;
 use think\Db;
 use think\Model;
 
-class AddHall extends Model
+class Hall extends Model
 {
     protected $table = 'hall';
 
     public function index($data)
     {
-        $validate = validate('AddHall');
-
-        if (!$validate->check($data)) {
-            return -2;
-//            return $validate->getError();
-        }
         $res = Db::table('hall')->where('hall_name', $data['hall_name'])->find();
         if ($res) {
             return 2;
         }
-        $admin = new AddHall;
+        $admin = new Hall;
 
         if ($admin->allowField(true)->save($data)) {
-            return 1;
+            return $data;
         } else {
             return -1;
         }

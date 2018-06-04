@@ -4,7 +4,6 @@ namespace app\index\model;
 
 use think\Model;
 use think\Db;
-use app\index\model\GetIp as IpAction;
 
 class User extends Model
 {
@@ -29,12 +28,13 @@ class User extends Model
             $data['customer_update_time'] = date("Y-m-d H:i:s",time());
             $data['class_id'] = 0;
             $data['login_cnt'] = 0;
+            $data['authority'] = 0;
 
             $user = new User;
 
             if ($user->allowField(true)->save($data)) { //注册成功
 
-                return 1;
+                return $data;
             } else {    //其他错误
 
                 return -1;
@@ -94,10 +94,7 @@ class User extends Model
 //                'name'      => $sessionValMd5
 //            ]);
 
-            return [
-                'user_name'     => $res['customer_name'],   //顾客昵称
-                'authority'     => $res['authority'],   //用户权限
-            ];
+            return $res;
         } else if ($res['customer_passwd'] != $customer_passwd) {
             return -1;
         } else {

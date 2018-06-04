@@ -17,6 +17,7 @@ class AddMovie extends Validate
         'movie_main_actor'      => 'require',
         'movie_director'        => 'require',
         'movie_duration'        => 'require|number',
-        'movie_description'     => 'require'
+        'movie_description'     => 'require',
+        'movie_pic'             => 'require'
     ];
 }

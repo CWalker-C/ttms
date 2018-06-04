@@ -13,9 +13,8 @@ class AddSchedule extends Validate
 {
     protected $rule = [
         'movie_name'            => 'require',
-        'hall_id'               => 'require|number',
-        'schedule_time'         => 'require',
+        'hall_name'               => 'require',
         'schedule_price'        => 'require',
-        'schedule_begin_time'   => 'require|date',
+        'schedule_begin_time'   => 'require',
     ];
 }

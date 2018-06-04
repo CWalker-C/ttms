@@ -11,29 +11,34 @@ use think\Db;
 use think\Model;
 
 
-class AddMovie extends Model
+class Movie extends Model
 {
     protected $table = 'movie_info';
 
-    public function index($data)
+    public function index()
     {
-        $validate = validate('AddMovie');
+
+
+    }
+
+    //添加影片
+    public function addMovie($data)
+    {
+        $validate = validate('add_movie');
 
         if (!$validate->check($data)) {
-            return -2;
-        //            return $validate->getError();
+            return $validate->getError();
         }
         $res = Db::table('movie_info')->where('movie_name', $data['movie_name'])->find();
         if ($res) {
             return 2;
         }
-        $admin = new AddMovie;
+        $admin = new Movie;
 
         if ($admin->allowField(true)->save($data)) {
-            return 1;
+            return $data;
         } else {
             return -1;
         }
-
     }
 }

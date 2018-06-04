@@ -10,7 +10,7 @@ namespace app\admin\model;
 use think\Model;
 use think\Db;
 
-class AddSchedule extends Model
+class Schedule extends Model
 {
     protected $table = 'schedule';
 
@@ -18,12 +18,17 @@ class AddSchedule extends Model
     {
 //        var_dump($data);
 
-        $beginTimeSch = $data['schedule_begin_time'];
+        $beginTimeSchStamp = $data['schedule_begin_time'];
         $movieName = $data['movie_name'];
+        $hallName = $data['hall_name'];
 
         $movieInfo = Db::table('movie_info')
                     ->where('movie_name', $movieName)
                     ->find();
+        $hallInfo = Db::table('hall')
+                    ->where('hall_name', $data['hall_name'])
+                    ->find();
+        $hall_id = $hallInfo['hall_id'];
 
 //        var_dump($movieInfo);
 
@@ -31,18 +36,17 @@ class AddSchedule extends Model
             return -1;  //影片没有加入热映列表中
         }
         $movieId = $movieInfo['movie_id'];
-        $endTimeSch = $beginTimeSch + $movieInfo['movie_duration'];
+        $endTimeSchStamp = $beginTimeSchStamp + $movieInfo['movie_duration'] * 60;
 
-        $adminor = new AddSchedule;
-
-//        $res = $adminor->field('schedule_begin_time', true)
-//            ->where('hall_id', $data['hall_id'])
-//            ->where('movie_id', $movieId)
-//            ->select();
+        if ($beginTimeSchStamp < time()) {   //时间过期
+            return -2;
+        }
+        $data += ['hall_id' => $hall_id];
+        $data += ['movie_id' => $movieId];
+        $data['schedule_begin_time'] = date("Y-m-d H:i:s", $data['schedule_begin_time']);
 
         $res = Db::table('schedule')
                ->field('schedule_begin_time')
-               ->where('movie_id', $movieId)
                ->where('hall_id', $data['hall_id'])
                ->select();
 
@@ -51,22 +55,22 @@ class AddSchedule extends Model
         for ($i = 0; $i < count($res); ++$i) {
             foreach ($res[$i] as $key => $value) {
                 $beginTimeSched = $value;
-                $endTimeSched = $value + $movieInfo['movie_duration'];
+                $beginTimeSchedStamp = strtotime($beginTimeSched);
+                $endTimeSchedStamp = strtotime($beginTimeSched) + $movieInfo['movie_duration'] * 60;
 
                 //安排时间段冲突
-                if (($beginTimeSch > $beginTimeSched && $beginTimeSch < $endTimeSched)
-                    || ($endTimeSch >= $beginTimeSched && $endTimeSch <= $endTimeSched)) {
+                if (($beginTimeSchStamp >= $beginTimeSchedStamp && $beginTimeSchStamp <= $endTimeSchedStamp)
+                    || ($endTimeSchStamp >= $beginTimeSchedStamp && $endTimeSchStamp <= $endTimeSchedStamp)) {
                     return -1;
                 }
             }
         }
-        $adminor = new AddSchedule;
+        $adminor = new Schedule;
         if ($adminor->allowField(true)->save($data)) {  //添加安排记录成功
-            return 1;
+            return $data;
         } else {
-            return -2;
+            return -3;
         }
-
     }
 
 }
