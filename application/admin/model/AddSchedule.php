@@ -60,13 +60,13 @@ class AddSchedule extends Model
                 }
             }
         }
-
+        $adminor = new AddSchedule;
+        if ($adminor->allowField(true)->save($data)) {  //添加安排记录成功
+            return 1;
+        } else {
+            return -2;
+        }
 
     }
-
-        /*$schedInfo = Db::table('schedule')
-                    ->where('hall_id', $data['hall_id'])
-                    ->where('movie_id', $movieId)
-                    ->select();*/
 
 }

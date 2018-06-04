@@ -18,7 +18,7 @@ class AddSchedule extends Controller
         if (request()->isPost()) {
             $validate = validate('add_schedule');
             if (!$validate->check(input('post.'))) {
-                return ['success' => 'data'];
+                return ['success' => 'dataIllegal'];
             }
 
             $user = new User;
@@ -35,14 +35,14 @@ class AddSchedule extends Controller
 
             $adminor = new AddSchModel();
             $res = $adminor->index($data);
-            if ($res) {
-
+            if ($res == 1) {
+                return ['success' => 'addSuccess'];
             }
             if ($res == -1) {
                 return ['success' => 'timeConflict'];
 
-            } else if ($res) {
-
+            } else if ($res== -2) {
+                return ['success' => 'addFailure'];
             }
 
         }
