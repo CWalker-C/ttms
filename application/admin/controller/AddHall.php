@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: zero
+ * UserLogin: zero
  * Date: 18-5-29
  * Time: 下午6:01
  */
@@ -20,15 +20,13 @@ class AddHall extends Controller
 
         $user = new User;
         $res = $user->isInlogin();
-        if ($res = -1) {
-            return ['sucess' => 'unLogin'];
-        }
-        if ($res == 2) {
-            return ['success' => 'reLogin'];
-        }
-        if ($res = 0) {
-            return ['success' => 'noAuthority'];
-        }
+//        if ($res == 0) {
+//            return ['success' => 'notLogin'];
+//
+//        }
+//        if ($res != 1) {
+//            return ['success' => 'noAuthority'];
+//        }
         if (request()->isPost() || $res == 1) {
             $data = input('post.');
 

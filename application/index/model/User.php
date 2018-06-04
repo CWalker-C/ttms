@@ -18,16 +18,6 @@ class User extends Model
     {
         if ($data) {
 
-            $validate = validate('Check');
-            if ($validate->check($data['customer_name'])) {
-
-                return $validate->getError();
-            }
-            else if ($validate->check($data['customer_passwd'])){
-                return $validate->getError();
-            }
-
-
             $res = Db::table('customer')->where('customer_email', $data['customer_email'])->find();
 
             if ($res) { //用户已存在
@@ -55,16 +45,8 @@ class User extends Model
     //用户登录
     public function login($customer_email = '', $customer_passwd = '')
     {
-        $validate = validate('Check');
-        if ($validate->check($customer_email)) {
-            return $validate->getError();
-        }
-        if ($validate->check($customer_passwd)) {
-            return $validate->getError();
-        }
-        $res = Db::table('customer')->where('customer_email', '=', $customer_email)->find();
-//        $res = Db::table('user_login')->where('user_name', '')->find();
 
+        $res = Db::table('customer')->where('customer_email', '=', $customer_email)->find();
 
         if (!$res) {    //用户不存在
             return 0;
@@ -92,7 +74,7 @@ class User extends Model
             $user->commit();
 
 
-            session($customer_email, $res);
+            session('user', $res);
 
 //            $sessionKey = md5($customer_email);
 //            $ipAction = new IpAction;
@@ -114,7 +96,6 @@ class User extends Model
 
             return [
                 'user_name'     => $res['customer_name'],   //顾客昵称
-                'cookie'        => $sessionKey, //cookie
                 'authority'     => $res['authority'],   //用户权限
             ];
         } else if ($res['customer_passwd'] != $customer_passwd) {

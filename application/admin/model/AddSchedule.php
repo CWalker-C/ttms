@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: zero
+ * UserLogin: zero
  * Date: 18-5-29
  * Time: 下午6:06
  */
@@ -16,35 +16,51 @@ class AddSchedule extends Model
 
     public function index($data)
     {
+//        var_dump($data);
 
-
-        $beginTime = $data['schedule_begin_time'];
+        $beginTimeSch = $data['schedule_begin_time'];
         $movieName = $data['movie_name'];
 
         $movieInfo = Db::table('movie_info')
                     ->where('movie_name', $movieName)
                     ->find();
 
-        var_dump($movieInfo);
+//        var_dump($movieInfo);
 
-        if ($movieInfo) {
+        if (!$movieInfo) {
             return -1;  //影片没有加入热映列表中
         }
         $movieId = $movieInfo['movie_id'];
-        $endTime = $beginTime + $movieInfo['movie_duration'];
+        $endTimeSch = $beginTimeSch + $movieInfo['movie_duration'];
 
         $adminor = new AddSchedule;
 
-        $res = $adminor->field('schedule_begin_time', true)
-            ->where('hall_id', $data['hall_id'])
-            ->where('movie_id', $movieId)
-            ->select();
+//        $res = $adminor->field('schedule_begin_time', true)
+//            ->where('hall_id', $data['hall_id'])
+//            ->where('movie_id', $movieId)
+//            ->select();
 
-        var_dump($res);
+        $res = Db::table('schedule')
+               ->field('schedule_begin_time')
+               ->where('movie_id', $movieId)
+               ->where('hall_id', $data['hall_id'])
+               ->select();
 
-        foreach ($res as $key => $value) {
+//        var_dump($res);
+//        var_dump(count($res));
+        for ($i = 0; $i < count($res); ++$i) {
+            foreach ($res[$i] as $key => $value) {
+                $beginTimeSched = $value;
+                $endTimeSched = $value + $movieInfo['movie_duration'];
 
+                //安排时间段冲突
+                if (($beginTimeSch > $beginTimeSched && $beginTimeSch < $endTimeSched)
+                    || ($endTimeSch >= $beginTimeSched && $endTimeSch <= $endTimeSched)) {
+                    return -1;
+                }
+            }
         }
+
 
     }
 

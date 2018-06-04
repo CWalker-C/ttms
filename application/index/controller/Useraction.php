@@ -4,8 +4,7 @@ namespace app\index\controller;
 
 use app\index\model\User;
 use think\Controller;
-use app\index\model\GetIp as IpAction;
-
+use think\Loader;
 class Useraction extends Controller
 {
     private $userExisErr = array('success' => 'userExist');   //用户已存在
@@ -14,7 +13,6 @@ class Useraction extends Controller
     private $noUser = array('success'  =>  'nonUser');  //用户不存在
     private $passwdErr = array('success'    => 'passwdErr');   //密码错误
     private $otherErr = array('success'    => 'otherErr');   //其他错误
-    private $sessionKey;
 
     public function __construct()
     {
@@ -33,6 +31,11 @@ class Useraction extends Controller
     public function register() {
         header('Access-Control-Allow-Origin: *');
         if (request()->isPost()) {
+            $validate = validate('user_register');
+            if (!$validate->check(input('post.'))) {
+                return ['success'=>'dataIllegal'];
+            }
+
             $data = input('post.');
 
             $user = new User();
@@ -56,6 +59,12 @@ class Useraction extends Controller
         header('Access-Control-Allow-Origin: *');
 
         if (request()->isPost()) {
+
+            $validate = validate('user_login');
+            if (!$validate->check(input('post.'))) {
+                return ['success'=>'dataIllegal'];
+            }
+
             $customer_email = input('customer_email');
             $customer_passwd = input('customer_passwd');
 
@@ -66,12 +75,14 @@ class Useraction extends Controller
                 $this->status = 1;  //改变状态
 
                 return ['success'   => 'loginSuccess'] + $res;
-            } else if ($res == 0) { //用户不存
+            }
+            if ($res == 0) { //用户不存
                 return $this->noUser;
-            } else if ($res == -1) {
+            }
+            if ($res == -1) {
                 return $this->passwdErr;
             }
-            else if ($res == -2) {  //其他错误
+            if ($res == -2) {  //其他错误
                 return $this->otherErr;
             }
         }
@@ -80,13 +91,11 @@ class Useraction extends Controller
     //退出登录
     public function logout($sessionKey)
     {
-        $sessionValue = session($sessionKey);
-        $customer_email = session($sessionValue);
+//        $sessionValue = session($sessionKey);
+//        $customer_email = session($sessionValue);
  //       $authority = session($customer_email);
 
-        session($customer_email, null);
-        session($sessionValue, null);
-        session($sessionKey, null);
+        session(null);
 
         return ['success'   => 'logoutSuccess'];
     }
@@ -94,32 +103,14 @@ class Useraction extends Controller
     //判断用户是否在登录状态及权限
     public function isInlogin()
     {
-        $requestInfo =  apache_request_headers();
+        if (session('?user')) {
+            $userInfo = session('user');
+            $authority = $userInfo['authority'];
 
-        $sessionKey = $requestInfo['Cookie'];
-
- //       $sessionKey = input('cookie');
-        $sessionValue = session($sessionKey);
-        $customer_email = session($sessionValue);
-        $authority = session($customer_email);
-
-        if (!$sessionValue) {   //用户没有登录
-            return -1;
-        }
-        $customer_email = session($sessionValue);
-        $authority = session($customer_email);
-
-        $ipAction = new IpAction;
-        $ip = $ipAction->index();
-        $sessionValueNow = $customer_email + $ip;
-        $sessionValMd5 = md5($sessionValue);
-
-        if ($sessionValue != $sessionValueNow) {    //用户在其他地方登录
-            return 2;
+            return $authority;
         } else {
-            return $authority;  //返回用户的权限值
+            return 0;
         }
-
     }
 
     //验证码

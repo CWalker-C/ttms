@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: zero
+ * UserLogin: zero
  * Date: 18-5-29
  * Time: 下午4:55
  */
@@ -9,6 +9,7 @@ namespace app\admin\model;
 
 use think\Db;
 use think\Model;
+
 
 class AddMovie extends Model
 {

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: zero
+ * UserLogin: zero
  * Date: 18-5-29
  * Time: 下午8:44
  */
@@ -23,7 +23,7 @@ class Admin extends Model
     {
         if ($data) {
 
-            $validate = validate('Check');
+            $validate = validate('UserLogin');
             if ($validate->check($data['customer_name'])) {
 
                 return $validate->getError();
@@ -60,7 +60,7 @@ class Admin extends Model
     //用户登录
     public function login($customer_name = '', $customer_passwd = '')
     {
-        $validate = validate('Check');
+        $validate = validate('UserLogin');
         if ($validate->check($customer_name)) {
             return $validate->getError();
         }
