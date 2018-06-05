@@ -13,7 +13,7 @@ class UserRegister extends Validate
 {
     protected $rule = [
         'customer_name'         => 'require',
-        'customer_mobile'       => 'require|mobile',
+        'customer_mobile'       => 'require',
         'customer_email'        => 'require|email',
         'customer_passwd'       => 'require|length:6,16'
     ];

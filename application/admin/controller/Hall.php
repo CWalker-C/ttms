@@ -54,7 +54,7 @@ class Hall extends Controller
             $data = input('post.');
 
             $adminor = new AddHallModel();
-            $res = $adminor->index($data);
+            $res = $adminor->addHall($data);
 
             if (is_array($res)) {
                 return [

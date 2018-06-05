@@ -16,6 +16,12 @@ class Hall extends Model
 
     public function index($data)
     {
+
+    }
+
+    //添加影厅
+    public function addHall($data)
+    {
         $res = Db::table('hall')->where('hall_name', $data['hall_name'])->find();
         if ($res) {
             return 2;

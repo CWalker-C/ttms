@@ -20,6 +20,9 @@ class User extends Controller
     //用户注册
     public function register() {
         header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
+
         if (request()->isPost()) {
             //验证数据是否合法
             $validate = validate('user_register');
@@ -68,6 +71,8 @@ class User extends Controller
     public function login()
     {
         header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
 
         if (request()->isPost()) {
 
@@ -85,11 +90,9 @@ class User extends Controller
 
             $user = new UserModel();
             $res = $user->login($customer_email, $customer_passwd);
-//            var_dump($res);
-            if (is_array($res)) { //登录成功
-                $this->status = 1;  //改变状态
 
-//                return ['success'   => 'loginSuccess'] + $res;
+            if (is_array($res)) { //登录成功
+
                 return [
                     'status'    => 0,
                     'msg'       => '',
