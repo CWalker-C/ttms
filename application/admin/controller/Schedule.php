@@ -21,6 +21,10 @@ class Schedule extends Controller
     //添加影厅安排
     public function addSchedule()
     {
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
+
         if (request()->isPost()) {
             $user = new User;
             $res = $user->isInLogin();
@@ -95,6 +99,10 @@ class Schedule extends Controller
     //查询已安排的电影时间段
     public function findHallScheTime()
     {
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
+
         if (request()->isPost()) {
             $user = new User;
             $res = $user->isInLogin();
