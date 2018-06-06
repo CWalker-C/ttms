@@ -33,26 +33,31 @@ class Ticket extends Model
         $movieId = $movieInfo[0]['movie_id'];
 
         $scheInfo = Db::table('schedule')
-            ->where('schedule_begin_time', $beginTime)
+            ->where('schedule_begin_time', date('Y-m-d H:i:s', $beginTime))
             ->where('movie_id', $movieId)
             ->select();
 
-        var_dump($scheInfo);
+//        var_dump($scheInfo);
 
         if (!$scheInfo) {   //电影未加入演出计划
             return -2;
         }
 
-//        var_dump($scheInfo);
-
-        /*  $scheId = $scheInfo['schedule_id'];
+        $scheId = $scheInfo[0]['schedule_id'];
 
         $seatInfo = Db::table('order_seat')
             ->where('schedule_id', $scheId)
+            ->order('seat_id')
             ->select();
 
-        var_dump($seatInfo);*/
+//        var_dump($seatInfo);
 
+        $seatSold = array();
+        for ($i = 0; $i < count($seatInfo); ++$i) {
+            $seatSold[$i] = ['row' => $seatInfo[$i]['seat_row'], 'col' => $seatInfo[$i]['seat_col']];
+        }
+
+        return $seatSold;
     }
 
     //购票

@@ -36,13 +36,28 @@ class Ticket extends Controller
 
         $user = new TicketModel();
         $res = $user->findTicket($data);
-        if ($res) {
 
+        if (is_array($res)) {
+            return [
+                'status'    => 0,
+                'msg'       => '',
+                'data'      => $res
+            ];
         }
-        if ($res) {
-
+        if ($res == -1) {
+            return [
+                'status'    => 1,
+                'msg'       => 'the film is not shown',
+                'data'      => ''
+            ];
         }
-
+        if ($res == -2) {
+            return [
+                'status'    => 1,
+                'msg'       => 'no plan for the film',
+                'data'      => ''
+            ];
+        }
     }
 
     //待支付
