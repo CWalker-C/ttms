@@ -28,7 +28,7 @@ class Movie extends Controller
         if (request()->isPost()) {
             $user = new User;
             $res = $user->isInLogin();
-            /*if ($res == 0) {
+            if ($res == 0) {
 
                 //用户没有登录
                 return [
@@ -43,7 +43,7 @@ class Movie extends Controller
                     'msg'       => 'user does not have enough permissions',
                     'data'      => ''
                 ];
-            }*/
+            }
 
             $validate = validate('add_movie');
             if (!$validate->check(input('post.'))) {

@@ -13,6 +13,7 @@ use think\Db;
 
 class Ticket extends Model
 {
+
     public function index()
     {
 
@@ -58,6 +59,61 @@ class Ticket extends Model
         }
 
         return $seatSold;
+    }
+
+    //支付中
+    public function inPayment($data)
+    {
+        $movieName = $data['movie_name'];
+        $scheBegTime = $data['schedule_begin_time'];
+        $seatRow = $data['seat_row'];
+        $seatCol = $data['seat_col'];
+        $cusInfo = session(''); //顾客信息
+
+        $movieInfo = Db::table('movie_info')
+            ->where('$movie_name', $movieName)
+            ->select();
+        if (!$movieInfo) {  //电影已下架
+            return -1;
+        }
+
+        //影片安排信息
+        $scheInfo = Db::table('schedule')
+            ->where('movie_id', $movieInfo[0]['movie_id'])
+            ->where('schedule_begin_time', date('Y-m-d H:i:s', $scheBegTime))
+            ->select();
+        if (!$scheInfo) {   //电影未上映
+            return -2;
+        }
+        $disPrice = $scheInfo[0]['schedule_price'] * (1 - $cusInfo['class_id'] * 0.5);
+
+        $orderInfo = [
+            'customer_id'   => $cusInfo['customer_id'],
+            'schedule_id'   => $scheInfo[0]['schedule_id'],
+            'schedule_price'=> $disPrice,
+            'order_date'    => date('Y-m-d H:i:s', time()),
+            'is_active'     => 0
+        ];
+        $orderRes = Db::table('order')->insert($orderInfo);
+        if (!$orderRes) {
+            return -3;
+        }
+        $orderInfo = Db::table('order')
+            ->where('customer_id', $cusInfo['customer_id'])
+            ->where('schedule_id', $scheInfo[0]['schedule_id'])
+            ->select();
+
+        $orderId = $orderInfo[0]['order_id'];
+
+        $seatInfo = [
+            'order_id'      => $orderId,
+            'seat_row'      => $seatRow,
+            'seat_col'      => $seatCol,
+            'schedule_id'   => $scheInfo[0]['schedule_id'],
+            'is_active'     => 0,
+            'pay_time'      => date('Y-m-d H:i:s', time())
+        ];
+        
     }
 
     //购票

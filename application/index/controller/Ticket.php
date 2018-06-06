@@ -61,6 +61,37 @@ class Ticket extends Controller
     }
 
     //待支付
+    public function inPayment()
+    {
+        /*$user = new User;
+        $res = $user->isInLogin();
+        if ($res == 0) {
+
+            //用户没有登录
+            return [
+                'status'    => 1,
+                'msg'       => 'the user didn\'t log in',
+                'data'      => ''
+            ];
+        }*/
+
+        $validate = validate('in_payment');
+        if (!$validate->check(input('post.'))) {
+            return [
+                'status' => 1,
+                'msg' => $validate->getError(),
+                'data' => ''
+            ];
+        }
+        $data = input('post.');
+
+        $user = new TicketModel();
+        $res = $user->inPayment($data);
+        if ($res) {
+
+        }
+
+    }
 
 
     //购票
