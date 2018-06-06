@@ -25,7 +25,7 @@ class Hall extends Controller
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
 
-        $user = new User;
+        /*$user = new User;
         $res = $user->isInLogin();
         if ($res == 0) {
 
@@ -42,7 +42,7 @@ class Hall extends Controller
                 'msg'       => 'user does not have enough permissions',
                 'data'      => ''
             ];
-        }
+        }*/
         if (request()->isPost()/* || $res == 1*/) {
             $validate = validate('add_hall');
             if (!$validate->check(input('post.'))) {
