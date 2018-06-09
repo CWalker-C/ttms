@@ -20,7 +20,8 @@ class Movie extends Controller
     }
 
     //添加影片
-    public function addMovie() {
+    public function addMovie()
+    {
         header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
@@ -28,29 +29,29 @@ class Movie extends Controller
         if (request()->isPost()) {
             $user = new User;
             $res = $user->isInLogin();
-            if ($res == 0) {
+            /*if ($res == 0) {
 
                 //用户没有登录
                 return [
-                    'status'    => 1,
-                    'msg'       => 'the user didn\'t log in',
-                    'data'      => ''
+                    'status' => 1,
+                    'msg' => 'the user didn\'t log in',
+                    'data' => ''
                 ];
             }
             if ($res != 1) {
                 return [
-                    'status'    => 1,
-                    'msg'       => 'user does not have enough permissions',
-                    'data'      => ''
+                    'status' => 1,
+                    'msg' => 'user does not have enough permissions',
+                    'data' => ''
                 ];
-            }
+            }*/
 
             $validate = validate('add_movie');
             if (!$validate->check(input('post.'))) {
                 return [
-                    'status'    => 1,
-                    'msg'       => $validate->getError(),
-                    'data'      => ''
+                    'status' => 1,
+                    'msg' => 'the data you input is not legal',
+                    'data' => ''
                 ];
             }
 
@@ -66,7 +67,7 @@ class Movie extends Controller
                     'data'      => $data
                 ];
             }
-            if (is_string($res)){
+            if (is_string($res)) {
                 return [
                     'status'    => 1,
                     'msg'       => $res,
@@ -85,6 +86,169 @@ class Movie extends Controller
                     'status'    => 1,
                     'msg'       => 'the server is busy now',
                     'data'      => ''
+                ];
+            }
+        }
+    }
+
+    //查询电影信息
+    public function findMovie()
+    {
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
+
+        $validate = validate('find_movie');
+        if (!$validate->check(input('post.'))) {
+            return [
+                'status' => 1,
+                'msg' => 'the data you input is not legal',
+                'data' => ''
+            ];
+        }
+        $data = input('post.');
+        $user = new MovieModel();
+        $res = $user->findMovie($data);
+        if (is_array($res)) {
+            return [
+                'status' => 0,
+                'msg' => '',
+                'data' => $res
+            ];
+        } else {
+            return [
+                'status' => 1,
+                'msg' => 'the server is busy now',
+                'data' => ''
+            ];
+        }
+    }
+
+    //修改电影信息
+    public function modifyMovie()
+    {
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
+
+        if (request()->isPost()) {
+            $user = new User;
+            $res = $user->isInLogin();
+            /*if ($res == 0) {
+
+                //用户没有登录
+                return [
+                    'status' => 1,
+                    'msg' => 'the user didn\'t log in',
+                    'data' => ''
+                ];
+            }
+            if ($res != 1) {
+                return [
+                    'status' => 1,
+                    'msg' => 'user does not have enough permissions',
+                    'data' => ''
+                ];
+            }*/
+
+            $validate = validate('add_movie');
+            if (!$validate->check(input('post.'))) {
+                return [
+                    'status' => 1,
+                    'msg' => 'the data you input is not legal',
+                    'data' => ''
+                ];
+            }
+
+            $data = input('post.');
+
+            $admin = new MovieModel();
+            $res = $admin->modifyMovie($data);
+
+
+            if (is_array($res)) {
+                return [
+                    'status' => 0,
+                    'msg' => '',
+                    'data' => $res
+                ];
+            }
+            if ($res == -1) {
+                return [
+                    'status'    => 1,
+                    'msg'       => 'the film you delete is not existent',
+                    'data'      => ''
+                ];
+            } else {
+                return [
+                    'status' => 1,
+                    'msg' => 'the server is busy now',
+                    'data' => ''
+                ];
+            }
+        }
+    }
+
+    //删除电影
+    public function deleteMovie()
+    {
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
+
+        if (request()->isPost()) {
+            $user = new User;
+            $res = $user->isInLogin();
+            /*if ($res == 0) {
+
+                //用户没有登录
+                return [
+                    'status' => 1,
+                    'msg' => 'the user didn\'t log in',
+                    'data' => ''
+                ];
+            }
+            if ($res != 1) {
+                return [
+                    'status' => 1,
+                    'msg' => 'user does not have enough permissions',
+                    'data' => ''
+                ];
+            }*/
+
+            $validate = validate('delete_movie');
+            if (!$validate->check(input('post.'))) {
+                return [
+                    'status' => 1,
+                    'msg' => 'the data you input is not legal',
+                    'data' => ''
+                ];
+            }
+
+            $data = input('post.');
+
+            $admin = new MovieModel();
+            $res = $admin->deleteMovie($data);
+
+            if ($res == 0) {
+                return [
+                    'status' => 0,
+                    'msg' => '',
+                    'data' => ''
+                ];
+            }
+            if ($res == -1) {
+                return [
+                    'status'    => 1,
+                    'msg'       => 'the film you delete is not existent',
+                    'data'      => ''
+                ];
+            }
+            else {
+                return [
+                    'status' => 1,
+                    'msg' => 'the server is busy now',
+                    'data' => ''
                 ];
             }
         }

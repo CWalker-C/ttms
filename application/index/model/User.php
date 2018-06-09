@@ -73,7 +73,10 @@ class User extends Model
             }
             $user->commit();
 
-
+            session([
+                'expire'    => 3600,
+                'name'      => 'user'
+            ]);
             session('user', $res);
 
 //            $sessionKey = md5($customer_email);

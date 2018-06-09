@@ -121,4 +121,95 @@ class Schedule extends Model
         return $movieSchedInfo;
     }
 
+    //修改演出计划
+    public function modifySchedule($scheInfo)
+    {
+        $beginTimeSchStamp = $scheInfo['schedule_begin_time'];
+        $movieName = $scheInfo['movie_name'];
+        $hallName = $scheInfo['hall_name'];
+        $scheId = $scheInfo['schedule_id'];
+
+        $movieInfo = Db::table('movie_info')
+            ->where('movie_name', $movieName)
+            ->find();
+        $hallInfo = Db::table('hall')
+            ->where('hall_name', $hallName)
+            ->find();
+//        var_dump($movieInfo);
+
+        if (!$movieInfo) {
+            return -1;  //影片没有加入热映列表中
+        }
+        $hall_id = $hallInfo['hall_id'];
+        $movieId = $movieInfo['movie_id'];
+        $endTimeSchStamp = $beginTimeSchStamp + $movieInfo['movie_duration'] * 60;
+
+//        var_dump($beginTimeSchStamp);
+//        var_dump(time());
+
+        if ($beginTimeSchStamp < time()) {   //时间过期
+            return -2;
+        }
+        $data = [
+            'movie_id'              => $movieId,
+            'hall_id'               => $hall_id,
+            'schedule_price'        => $scheInfo['schedule_price'],
+            'schedule_begin_time'   => date("Y-m-d H:i:s", $scheInfo['schedule_begin_time'])
+        ];
+        $res = Db::table('schedule')
+            ->field('schedule_begin_time')
+            ->where('hall_id', $data['hall_id'])
+            ->select();
+
+//        var_dump($res);
+//        var_dump(count($res));
+        for ($i = 0; $i < count($res); ++$i) {
+            foreach ($res[$i] as $key => $value) {
+                $beginTimeSched = $value;
+                $beginTimeSchedStamp = strtotime($beginTimeSched);
+                $endTimeSchedStamp = strtotime($beginTimeSched) + $movieInfo['movie_duration'] * 60;
+
+                //安排时间段冲突
+                if (($beginTimeSchStamp >= $beginTimeSchedStamp && $beginTimeSchStamp <= $endTimeSchedStamp)
+                    || ($endTimeSchStamp >= $beginTimeSchedStamp && $endTimeSchStamp <= $endTimeSchedStamp)) {
+                    return -3;
+                }
+            }
+        }
+        $adminor = new Schedule;
+        if ($adminor->allowField(true)->where('schedule_id', $scheId)->update($data)) {  //添加安排记录成功
+            return $data;
+        } else {
+            return -4;
+        }
+    }
+
+    //删除演出计划信息
+    public function deleteSche($data)
+    {
+        $res = Db::table('schedule')
+            ->where('schedule_id', $data['schedule_id'])
+            ->select();
+
+        if (!$res) {
+            return -1;
+        }
+
+        $res = Model::where('schedule_id', $data['schedule_id'])
+            ->update(['is_active' => -3]);
+
+        return $res;
+    }
+
+    //查询已安排的演出计划
+    public function findSche()
+    {
+        $res = Db::table('schedule')
+            ->whereTime('schedule_begin_time','>=', 'today')
+            ->where('is_active', 1)
+            ->select();
+
+        return $res;
+    }
+
 }

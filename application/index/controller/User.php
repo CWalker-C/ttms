@@ -130,6 +130,9 @@ class User extends Controller
     //退出登录
     public function logout()
     {
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
 //        $sessionValue = session($sessionKey);
 //        $customer_email = session($sessionValue);
  //       $authority = session($customer_email);
