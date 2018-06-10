@@ -48,7 +48,7 @@ class Hall extends Model
                    'hall_id'           => $hallId,
                    'seat_row'          => $row,
                    'seat_col'          => $col,
-                   'seat_is_active'    => 1
+                   'seat_is_active'    => 1 //不可用
                 ];
 
                Db::table('seat')
@@ -72,6 +72,22 @@ class Hall extends Model
             ->select();
 
         return $res;
+    }
+
+    //查询演出厅座位
+    public function findSeat($data)
+    {
+        $hallId = $data['hall_id'];
+        $res = Db::table('seat')
+            ->where('hall_id', $hallId)
+            ->where('seat_is_active', 1)
+            ->select();
+        $dis_seat = array();
+        for ($i = 0; $i < count($res); ++$i) {
+            $dis_seat = array_merge($dis_seat, [[$res[$i]['seat_row'], $res[$i]['seat_col']]]);
+        }
+
+        return $dis_seat;
     }
 
     //修改演出厅信息

@@ -25,24 +25,7 @@ class Hall extends Controller
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
 
-        $user = new User;
-        $res = $user->isInLogin();
-       /* if ($res == 0) {
 
-            //用户没有登录
-            return [
-                'status'    => 1,
-                'msg'       => 'the user didn\'t log in',
-                'data'      => ''
-            ];
-        }
-        if ($res != 1) {
-            return [
-                'status'    => 1,
-                'msg'       => 'user does not have enough permissions',
-                'data'      => ''
-            ];
-        }*/
         if (request()->isPost()/* || $res == 1*/) {
             $validate = validate('add_hall');
             if (!$validate->check(input('post.'))) {
@@ -88,8 +71,43 @@ class Hall extends Controller
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
 
+
+
         $user = new HallModel();
         $res = $user->findHall();
+        if (is_array($res)) {
+            return [
+                'status' => 0,
+                'msg' => '',
+                'data' => $res
+            ];
+        } else {
+            return [
+                'status' => 1,
+                'msg' => 'the server is busy now',
+                'data' => ''
+            ];
+        }
+    }
+
+    //查询演出厅座位
+    public function findSeat()
+    {
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
+
+        $validate = validate('find_hall');
+        if (!$validate->check(input('post.'))) {
+            return [
+                'status' => 1,
+                'msg' => 'the data you input is not legal',
+                'data' => ''
+            ];
+        }
+        $data = input('post.');
+        $user = new HallModel();
+        $res = $user->findSeat($data);
         if (is_array($res)) {
             return [
                 'status' => 0,

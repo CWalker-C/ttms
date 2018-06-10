@@ -104,9 +104,9 @@ class Ticket extends Model
             ->where('is_active', '<>', -1)
             ->select();
 
-        if (count($orderInfo) > 6) {  //用户买票数已达6个
-            return 1;
-        }
+//        if (count($orderInfo) > 6) {  //用户买票数已达6个
+//            return 1;
+//        }
        /* for ($i = 0; $i < count($orderInfo); ++$i) {
             if ($orderInfo[$i]['is_active'] == 1) { //票已被购买
                 return -3;
