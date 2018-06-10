@@ -61,7 +61,7 @@ class Hall extends Controller
                 return [
                     'status:'   => 0,
                     'msg'       => '',
-                    'data'      => $data
+                    'data'      => $res
                 ];
             }
             if ($res == 2) {

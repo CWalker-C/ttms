@@ -13,6 +13,8 @@ use think\Db;
 
 class Ticket extends Model
 {
+    protected $table = 'order';
+
     private $movieInfo;
     private $hallInfo;
     private $cusInfo;
@@ -26,44 +28,36 @@ class Ticket extends Model
 
     }
 
-    //查询是否有票
+    //查询票务状况
     public function findTicket($data) {
         $movieName = $data['movie_name'];
         $beginTime = $data['schedule_begin_time'];
-
         $movieInfo = Db::table('movie_info')
             ->where('movie_name', $movieName)
             ->select();
         if (!$movieInfo) {  //电影未上映
             return -1;
         }
-
         $movieId = $movieInfo[0]['movie_id'];
-
         $scheInfo = Db::table('schedule')
             ->where('schedule_begin_time', date('Y-m-d H:i:s', $beginTime))
             ->where('movie_id', $movieId)
             ->select();
 
-//        var_dump($scheInfo);
-
+ //       var_dump($scheInfo);
         if (!$scheInfo) {   //电影未加入演出计划
             return -2;
         }
-
         $scheId = $scheInfo[0]['schedule_id'];
-
         $seatInfo = Db::table('order')
             ->where('schedule_id', $scheId)
-            ->where('is_active', 1)
-            ->order('seat_id')
+            ->where('is_active', '1')
+            ->order('order_date')
             ->select();
-
 //        var_dump($seatInfo);
-
         $seatSold = array();
         for ($i = 0; $i < count($seatInfo); ++$i) {
-            $seatSold[$i] = ['row' => $seatInfo[$i]['seat_row'], 'col' => $seatInfo[$i]['seat_col']];
+             $seatSold[$i] = ['row' => $seatInfo[$i]['seat_row'], 'col' => $seatInfo[$i]['seat_col']];
         }
 
         return $seatSold;
@@ -103,68 +97,64 @@ class Ticket extends Model
         $disPrice = $this->scheInfo[0]['schedule_price'] * (1 - $this->cusInfo['class_id'] * 0.5);
 
 //        var_dump($disPrice);
-        $orderNum = Db::table('order')
-            ->where('customer_id', /*$this->cusInfo['customer_id']*/1)
-            ->where('schedule_id', $this->scheInfo[0]['schedule_id'])
-            ->whereOr('is_active', '=', 0)
-            ->whereOr('is_active', '=', 1)
-            ->count();
-//        if ($orderNum > 5) {
-//            return 1;
-//        }
-
-        $this->orderInfo = [
-            'customer_id'   => /*$this->cusInfo['customer_id']*/1,
-            'schedule_id'   => $this->scheInfo[0]['schedule_id'],
-            'order_discount_price'=> $disPrice,
-            'order_date'    => date('Y-m-d H:i:s', time()),
-            'is_active'     => 0,
-            'seat_row'      => $this->seatRow,
-            'seat_col'      => $this->seatCol
-        ];
-
-        $orderRes = Db::table('order')
-            ->insert($this->orderInfo);
-        if (!$orderRes) {
-            return -3;
-        }
-//        $orderInfo = Db::table('order')
-//            ->where('customer_id', /*$this->cusInfo['customer_id']*/1)
-//            ->where('schedule_id', $this->scheInfo[0]['schedule_id'])
-//            ->whereOr('is_active', '=', 0)
-//            ->whereOr('is_active', '=', 1)
-//            ->select();
-//
-//        var_dump($orderInfo);
-/*
-        $seatScheInfo = Db::table('order_seat')
+        $orderInfo = Ticket::where('customer_id', /*$this->cusInfo['customer_id']*/4)
             ->where('schedule_id', $this->scheInfo[0]['schedule_id'])
             ->where('seat_row', $this->seatRow)
             ->where('seat_col', $this->seatCol)
+            ->where('is_active', '<>', -1)
             ->select();
-        if ($seatScheInfo != null) {
-            if ($seatScheInfo[0]['is_active'] == 0) {    //座位正在购买
-                return -4;
-            }
-            if ($seatScheInfo[0]['is_active'] == 1) {   //座位已售出
-                return -5;
-            }
-        }
 
-          $orderId = $orderInfo[0]['order_id'];
-        $this->orderInfo += ['order_id', $orderId];
-          $seatInfo = [
-              'order_id'      => $orderId,
-              'seat_row'      => $this->seatRow,
-              'seat_col'      => $this->seatCol,
-              'schedule_id'   => $this->scheInfo[0]['schedule_id'],
-              'is_active'     => 0,
-              'pay_time'      => date('Y-m-d H:i:s', time())
-          ];
-          $seatInsertRes = Db::table('order_seat')->insertAll($seatInfo);
-          if ($seatInsertRes) {
-              return $seatInfo;
-          }*/
+        if (count($orderInfo) > 6) {  //用户买票数已达6个
+            return 1;
+        }
+       /* for ($i = 0; $i < count($orderInfo); ++$i) {
+            if ($orderInfo[$i]['is_active'] == 1) { //票已被购买
+                return -3;
+            }
+            if ($orderInfo[$i]['is_active'] == 0) {
+                if (time() - strtotime($orderInfo[$i]['order_date']) < 900) {
+                    return -3;
+                }
+            }
+        }*/
+       var_dump($orderInfo);
+//       if ($orderInfo) {
+//           if ($orderInfo['is_active'] == 1) {  //票已被购买
+//               return -3;
+//           }
+//           if ($orderInfo['is_active']   == 0) {
+//               if (time() - strtotime($orderInfo['order_date']) < 900) {
+//                   return -3;
+//               } else {
+//                   $this->orderInfo = [
+//                       'customer_id'   => /*$this->cusInfo['customer_id']*/4,
+//                       'schedule_id'   => $this->scheInfo['schedule_id'],
+//                       'order_discount_price'=> $disPrice,
+//                       'order_date'    => date('Y-m-d H:i:s', time()),
+//                       'is_active'     => 0,
+//                       'seat_row'      => $this->seatRow,
+//                       'seat_col'      => $this->seatCol
+//                   ];
+//                   $res = Db::table('order')
+//                       ->where('order_id', $orderInfo['order_id'])
+//                       ->update($this->orderInfo);
+//                   if ($res) {
+//                       return $this->orderInfo;
+//                   } else {
+//                       return ;
+//                   }
+//               }
+//           }
+//       }
+/*
+        $orderRes = Db::table('order')
+            ->insert($this->orderInfo);
+        if ($orderRes) {
+            return $this->orderInfo;
+        } else {
+            return ;
+        }*/
+
     }
 
     //购票

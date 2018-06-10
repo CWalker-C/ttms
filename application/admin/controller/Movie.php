@@ -64,7 +64,7 @@ class Movie extends Controller
                 return [
                     'status'    => 0,
                     'msg'       => '',
-                    'data'      => $data
+                    'data'      => $res
                 ];
             }
             if (is_string($res)) {

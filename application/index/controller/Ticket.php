@@ -31,7 +31,7 @@ class Ticket extends Controller
         if (!$validate->check(input('post.'))) {
             return [
                 'status'    => 1,
-                'msg'       => $validate->getError(),
+                'msg'       => 'the data you input is not legal',
                 'data'      => ''
             ];
         }
@@ -122,17 +122,16 @@ class Ticket extends Controller
                 'data'      => ''
             ];
         }
-        if ($res == -4) {
+        if ($res == -3) {
             return [
                 'status'    => 1,
-                'msg'       => 'the seat is being bought',
+                'msg'       => 'the seat has been bought',
                 'data'      => ''
             ];
-        }
-        if ($res == -5) {
+        } else {
             return [
                 'status'    => 1,
-                'msg'       => 'the seat has benn bought',
+                'msg'       => 'the server is busy now',
                 'data'      => ''
             ];
         }

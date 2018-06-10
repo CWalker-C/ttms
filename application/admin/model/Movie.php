@@ -24,7 +24,6 @@ class Movie extends Model
     //添加影片
     public function addMovie($data)
     {
-
         $res = Db::table('movie_info')->where('movie_name', $data['movie_name'])->find();
         if ($res) {
             return 2;
@@ -32,6 +31,8 @@ class Movie extends Model
         $admin = new Movie;
 
         if ($admin->allowField(true)->save($data)) {
+            $res = Db::table('movie_info')->where('movie_name', $data['movie_name'])->find();
+            $data = array_merge($data, ['movie_id' => $res['movie_id']]);
             return $data;
         } else {
             return -1;

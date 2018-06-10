@@ -28,10 +28,7 @@ class Hall extends Model
         if ($res) {
             return 2;
         }
-        $res = Db::table('hall')
-            ->where('hall_name', $data['hall_name'])
-            ->find();
-        $hallId = $res['hall_id'];
+
         $seatInfo = $data['seat_info'];
         $seatInfo = str_replace('[', '',$seatInfo);
         $seatInfo = str_replace(']', '',$seatInfo);
@@ -39,7 +36,10 @@ class Hall extends Model
 
         $admin = new Hall();
         if ($admin->allowField(true)->save($data)) {
-
+            $res = Db::table('hall')
+                ->where('hall_name', $data['hall_name'])
+                ->find();
+            $hallId = $res['hall_id'];
             for ($i = 0; $i < count($seatInfo); $i += 2) {
                 $row = $seatInfo[$i];
                 $col = $seatInfo[$i + 1];
@@ -54,7 +54,10 @@ class Hall extends Model
                Db::table('seat')
                    ->insert($seatInsert);
             }
-
+            $res = Db::table('hall')
+                ->where('hall_name', $data['hall_name'])
+                ->find();
+            $data = array_merge($data, ['hall_id' => $res['hall_id']]);
                 return $data;
         } else {
             return -1;
