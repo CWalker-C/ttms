@@ -172,7 +172,7 @@ class Hall extends Controller
             if ($res == -1) {
                 return [
                     'status'    => 1,
-                    'msg'       => 'the hall you delete is not existent',
+                    'msg'       => 'the hall you modify is not existent',
                     'data'      => ''
                 ];
             } else {

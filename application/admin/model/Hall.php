@@ -109,12 +109,43 @@ class Hall extends Model
             return -1;
         }
 
-        $movieModel = new Hall();
-        $res = $movieModel->where('hall_id', $data['hall_id'])
-            ->update($data);
-        if ($res == 0){
-            return $data;
+        $hallInfo = [
+            'hall_name'         => $data['hall_name'],
+            'hall_description'  => $data['hall_description'],
+            'seat_rows'         => $data['seat_rows'],
+            'seat_cols'         => $data['seat_cols'],
+            'hall_seats'        => $data['hall_seats'],
+            'is_active'         => 1
+        ];
+
+        Db::table('hall')
+            ->where('hall_id', $data['hall_id'])
+            ->update($hallInfo);
+        Db::table('seat')
+            ->where('hall_id', $data['hall_id'])
+            ->update(['seat_is_active'   => 0]);
+
+        $seatInfo = $data['seat_info'];
+        $seatInfo = str_replace('[', '',$seatInfo);
+        $seatInfo = str_replace(']', '',$seatInfo);
+        $seatInfo = explode(",", $seatInfo);
+
+        for ($i = 0; $i < count($seatInfo); $i += 2) {
+            $row = $seatInfo[$i];
+            $col = $seatInfo[$i + 1];
+
+            $seatInsert = [
+                'hall_id'           => $data['hall_id'],
+                'seat_row'          => $row,
+                'seat_col'          => $col,
+                'seat_is_active'    => 1 //不可用
+            ];
+
+            Db::table('seat')
+                ->insert($seatInsert);
         }
+
+        return $data;
     }
 
     //删除演出厅
