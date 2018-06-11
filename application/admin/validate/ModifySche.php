@@ -12,6 +12,6 @@ use think\Validate;
 class ModifySche extends Validate
 {
     protected $rule = [
-        ''
+
     ];
 }

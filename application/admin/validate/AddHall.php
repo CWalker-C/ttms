@@ -16,6 +16,7 @@ class AddHall extends Validate
         'hall_seats'        => 'require|number',
         'hall_description'  => 'require',
         'seat_rows'         => 'require|number',
-        'seat_cols'         => 'require|number'
+        'seat_cols'         => 'require|number',
+        'seat_info'         => 'require'
     ];
 }

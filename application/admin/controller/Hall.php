@@ -25,7 +25,6 @@ class Hall extends Controller
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
 
-
         if (request()->isPost()/* || $res == 1*/) {
             $validate = validate('add_hall');
             if (!$validate->check(input('post.'))) {

@@ -88,7 +88,7 @@ class Ticket extends Model
         if (!$this->scheInfo) {   //电影未上映
             return -2;
         }
-//        var_dump($this->scheInfo);
+        var_dump($this->scheInfo);
 
         $this->hallInfo = Db::table('hall')
             ->where('hall_id', $this->scheInfo[0]['hall_id'])
@@ -97,12 +97,14 @@ class Ticket extends Model
         $disPrice = $this->scheInfo[0]['schedule_price'] * (1 - $this->cusInfo['class_id'] * 0.5);
 
 //        var_dump($disPrice);
-        $orderInfo = Ticket::where('customer_id', /*$this->cusInfo['customer_id']*/4)
+        $orderInfo = Ticket::where('customer_id', /*$this->cusInfo['customer_id']*/1)
             ->where('schedule_id', $this->scheInfo[0]['schedule_id'])
             ->where('seat_row', $this->seatRow)
             ->where('seat_col', $this->seatCol)
             ->where('is_active', '<>', -1)
             ->select();
+
+//        var_dump($orderInfo);
 
 //        if (count($orderInfo) > 6) {  //用户买票数已达6个
 //            return 1;
@@ -117,7 +119,7 @@ class Ticket extends Model
                 }
             }
         }*/
-       var_dump($orderInfo);
+//       var_dump($orderInfo);
 //       if ($orderInfo) {
 //           if ($orderInfo['is_active'] == 1) {  //票已被购买
 //               return -3;
