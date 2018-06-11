@@ -20,7 +20,6 @@ class Index
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
 
-
         $url = 'https://box.maoyan.com/promovie/api/box/second.json';
         //此处mora-hu代表用户ID
         $ch = curl_init($url);

@@ -71,6 +71,13 @@ class Hall extends Model
             ->where('is_active', 1)
             ->select();
 
+        for ($i = 0; $i < count($res); ++$i) {
+            $cnt = Db::table('seat')
+                ->where('hall_id', $res[$i]['hall_id'])
+                ->count();
+            $res[$i] = array_merge($res[$i], ['seat_dis_cnt' => $cnt]);
+        }
+
         return $res;
     }
 
