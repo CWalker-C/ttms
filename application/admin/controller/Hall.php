@@ -30,12 +30,11 @@ class Hall extends Controller
             if (!$validate->check(input('post.'))) {
                 return [
                     'status'    => 1,
-                    'msg'       => 'the data you input is not legal',
+                    'msg'       => $validate->getError(),
                     'data'      => ''
                 ];
             }
             $data = input('post.');
-
             $adminor = new HallModel();
             $res = $adminor->addHall($data);
 
@@ -149,7 +148,7 @@ class Hall extends Controller
                 ];
             }*/
 
-            $validate = validate('add_hall');
+            $validate = validate('modify_hall');
             if (!$validate->check(input('post.'))) {
                 return [
                     'status' => 1,

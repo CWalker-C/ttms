@@ -114,7 +114,8 @@ class Schedule extends Model
             $movieSchedInfo[$k++] = [
                 'movie_name'        => $movieName,
                 'movie_begin_time'  => $movieBeginTime,
-                'movie_end_time'    => $movieEndTime
+                'movie_end_time'    => $movieEndTime,
+                'hall_name'         => $data['hall_name']
             ];
         }
 

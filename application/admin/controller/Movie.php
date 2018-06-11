@@ -176,7 +176,7 @@ class Movie extends Controller
             if ($res == -1) {
                 return [
                     'status'    => 1,
-                    'msg'       => 'the film you delete is not existent',
+                    'msg'       => 'the film you modify is not existent',
                     'data'      => ''
                 ];
             } else {

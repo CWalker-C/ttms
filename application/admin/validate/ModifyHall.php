@@ -9,7 +9,7 @@ namespace app\admin\validate;
 
 use think\Validate;
 
-class AddHall extends Validate
+class MOdifyHall extends Validate
 {
     protected $rule = [
         'hall_name'         => 'require',

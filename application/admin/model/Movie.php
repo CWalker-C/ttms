@@ -24,7 +24,11 @@ class Movie extends Model
     //添加影片
     public function addMovie($data)
     {
-        $res = Db::table('movie_info')->where('movie_name', $data['movie_name'])->find();
+        $res = Db::table('movie_info')
+            ->where('movie_name', $data['movie_name'])
+            ->where('is_active', '<>', -3)
+            ->find();
+
         if ($res) {
             return 2;
         }

@@ -86,7 +86,7 @@ class Ticket extends Controller
         if (!$validate->check(input('post.'))) {
             return [
                 'status' => 1,
-                'msg' => $validate->getError(),
+                'msg' => 'the data you input is not legal',
                 'data' => ''
             ];
         }
@@ -94,6 +94,7 @@ class Ticket extends Controller
 
         $user = new TicketModel();
         $res = $user->inPayment($data);
+//        var_dump($res);
         if (is_array($res)) {
             return [
                 'status'    => 0,
@@ -101,7 +102,7 @@ class Ticket extends Controller
                 'data'      => $res
             ];
         }
-        if ($res == 1) {
+        if ($res == 2) {
             return [
                 'status'    => 1,
                 'msg'       => 'excessive number of tickets',

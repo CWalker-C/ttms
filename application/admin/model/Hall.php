@@ -35,7 +35,10 @@ class Hall extends Model
         $seatInfo = explode(",", $seatInfo);
 
         $admin = new Hall();
-        if ($admin->allowField(true)->save($data)) {
+        $admin->allowField(true)->save($data);
+
+        if (count($seatInfo) > 1) {
+
             $res = Db::table('hall')
                 ->where('hall_name', $data['hall_name'])
                 ->find();
@@ -45,20 +48,32 @@ class Hall extends Model
                 $col = $seatInfo[$i + 1];
 
                 $seatInsert = [
-                   'hall_id'           => $hallId,
-                   'seat_row'          => $row,
-                   'seat_col'          => $col,
-                   'seat_is_active'    => 1 //不可用
+                    'hall_id'           => $hallId,
+                    'seat_row'          => $row,
+                    'seat_col'          => $col,
+                    'seat_is_active'    => 1 //不可用
                 ];
 
-               Db::table('seat')
-                   ->insert($seatInsert);
+                Db::table('seat')
+                    ->insert($seatInsert);
+
             }
-            $res = Db::table('hall')
-                ->where('hall_name', $data['hall_name'])
-                ->find();
-            $data = array_merge($data, ['hall_id' => $res['hall_id']]);
-                return $data;
+
+        }
+        $res = Db::table('hall')
+            ->where('hall_name', $data['hall_name'])
+            ->find();
+        $data = array_merge($data, ['hall_id' => $res['hall_id']]);
+        if ($res) {
+            return [
+                'hall_id'           => $data['hall_id'],
+                'hall_name'         => $data['hall_name'],
+                'hall_seats'        => $data['hall_seats'],
+                'seat_rows'         => $data['seat_rows'],
+                'seat_cols'         => $data['seat_cols'],
+                'hall_description'  => $data['hall_description'],
+                'seat_info'         => $data['seat_info']
+            ];
         } else {
             return -1;
         }
@@ -108,7 +123,6 @@ class Hall extends Model
         if (!$res) {
             return -1;
         }
-
         $hallInfo = [
             'hall_name'         => $data['hall_name'],
             'hall_description'  => $data['hall_description'],
@@ -117,10 +131,10 @@ class Hall extends Model
             'hall_seats'        => $data['hall_seats'],
             'is_active'         => 1
         ];
-
         Db::table('hall')
             ->where('hall_id', $data['hall_id'])
             ->update($hallInfo);
+
         Db::table('seat')
             ->where('hall_id', $data['hall_id'])
             ->update(['seat_is_active'   => 0]);
@@ -129,23 +143,32 @@ class Hall extends Model
         $seatInfo = str_replace('[', '',$seatInfo);
         $seatInfo = str_replace(']', '',$seatInfo);
         $seatInfo = explode(",", $seatInfo);
+        if (count($seatInfo) > 1) {
+            for ($i = 0; $i < count($seatInfo); $i += 2) {
+                $row = $seatInfo[$i];
+                $col = $seatInfo[$i + 1];
 
-        for ($i = 0; $i < count($seatInfo); $i += 2) {
-            $row = $seatInfo[$i];
-            $col = $seatInfo[$i + 1];
+                $seatInsert = [
+                    'hall_id'           => $data['hall_id'],
+                    'seat_row'          => $row,
+                    'seat_col'          => $col,
+                    'seat_is_active'    => 1 //不可用
+                ];
 
-            $seatInsert = [
-                'hall_id'           => $data['hall_id'],
-                'seat_row'          => $row,
-                'seat_col'          => $col,
-                'seat_is_active'    => 1 //不可用
-            ];
-
-            Db::table('seat')
-                ->insert($seatInsert);
+                Db::table('seat')
+                    ->insert($seatInsert);
+            }
         }
 
-        return $data;
+        return  [
+            'hall_id'           => $data['hall_id'],
+            'hall_name'         => $data['hall_name'],
+            'hall_seats'        => $data['hall_seats'],
+            'seat_rows'         => $data['seat_rows'],
+            'seat_cols'         => $data['seat_cols'],
+            'hall_description'  => $data['hall_description'],
+            'seat_info'         => $data['seat_info']
+        ];
     }
 
     //删除演出厅
