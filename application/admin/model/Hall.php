@@ -24,28 +24,27 @@ class Hall extends Model
     {
         $res = Db::table('hall')
             ->where('hall_name', $data['hall_name'])
+            ->where('is_active', '<>', -3)
             ->find();
         if ($res) {
             return 2;
         }
 
         $seatInfo = $data['seat_info'];
-        $seatInfo = str_replace('[', '',$seatInfo);
-        $seatInfo = str_replace(']', '',$seatInfo);
-        $seatInfo = explode(",", $seatInfo);
-
         $admin = new Hall();
         $admin->allowField(true)->save($data);
 
-        if (count($seatInfo) > 1) {
-
+        if (count($seatInfo) > 0) {
+            $seatInfo = str_replace('[', '',$seatInfo);
+            $seatInfo = str_replace(']', '',$seatInfo);
+            $seatInfo = explode(",", $seatInfo);
             $res = Db::table('hall')
                 ->where('hall_name', $data['hall_name'])
                 ->find();
             $hallId = $res['hall_id'];
-            for ($i = 0; $i < count($seatInfo); $i += 2) {
-                $row = $seatInfo[$i];
-                $col = $seatInfo[$i + 1];
+            for ($i = 0; $i < count($seatInfo); $i++) {
+                $row = $seatInfo[$i][0];
+                $col = $seatInfo[$i][1];
 
                 $seatInsert = [
                     'hall_id'           => $hallId,
@@ -56,7 +55,6 @@ class Hall extends Model
 
                 Db::table('seat')
                     ->insert($seatInsert);
-
             }
 
         }
@@ -89,6 +87,7 @@ class Hall extends Model
         for ($i = 0; $i < count($res); ++$i) {
             $cnt = Db::table('seat')
                 ->where('hall_id', $res[$i]['hall_id'])
+                ->where('seat_is_active', 1)
                 ->count();
             $res[$i] = array_merge($res[$i], ['seat_dis_cnt' => $cnt]);
         }
@@ -137,16 +136,17 @@ class Hall extends Model
 
         Db::table('seat')
             ->where('hall_id', $data['hall_id'])
-            ->update(['seat_is_active'   => 0]);
+            ->delete();
 
         $seatInfo = $data['seat_info'];
-        $seatInfo = str_replace('[', '',$seatInfo);
-        $seatInfo = str_replace(']', '',$seatInfo);
-        $seatInfo = explode(",", $seatInfo);
-        if (count($seatInfo) > 1) {
-            for ($i = 0; $i < count($seatInfo); $i += 2) {
-                $row = $seatInfo[$i];
-                $col = $seatInfo[$i + 1];
+
+        if (count($seatInfo) > 0) {
+            /*$seatInfo = str_replace('[', '',$seatInfo);
+            $seatInfo = str_replace(']', '',$seatInfo);
+            $seatInfo = explode(",", $seatInfo);*/
+            for ($i = 0; $i < count($seatInfo); $i++) {
+                $row = $seatInfo[$i][0];
+                $col = $seatInfo[$i][1];
 
                 $seatInsert = [
                     'hall_id'           => $data['hall_id'],
@@ -167,7 +167,8 @@ class Hall extends Model
             'seat_rows'         => $data['seat_rows'],
             'seat_cols'         => $data['seat_cols'],
             'hall_description'  => $data['hall_description'],
-            'seat_info'         => $data['seat_info']
+            'seat_info'         => $data['seat_info'],
+            'seat_dis_cnt'      => $data['seat_dis_cnt']
         ];
     }
 
@@ -186,7 +187,7 @@ class Hall extends Model
             ->update(['is_active' => -3]);
 
 //        var_dump($res);
-        return $res;
+        return 0;
     }
 
 }

@@ -20,6 +20,39 @@ class Ticket extends Controller
         ];
     }
 
+    //查询电影的演出计划
+    public function findMoiveSche()
+    {
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
+
+        $validate = validate('find_movie_Sche');
+        if (!$validate->check(input('post.'))) {
+            return [
+                'status'    => 1,
+                'msg'       => 'the data you input is not legal',
+                'data'      => ''
+            ];
+        }
+        $data =  input('post.');
+        $user = new TicketModel();
+        $res = $user->findMovieSche($data);
+        if (is_array($res)) {
+            return [
+                'status'    => 0,
+                'msg'       => '',
+                'data'      => $res
+            ];
+        } else {
+            return [
+                'status'    => 1,
+                'msg'       => 'the server is busy now',
+                'data'      => ''
+            ];
+        }
+    }
+
     //查询是否有票
     public function findTicket()
     {
@@ -58,6 +91,12 @@ class Ticket extends Controller
             return [
                 'status'    => 1,
                 'msg'       => 'no plan for the film',
+                'data'      => ''
+            ];
+        } else {
+            return [
+                'status'    => 1,
+                'msg'       => 'the server is busy now',
                 'data'      => ''
             ];
         }
@@ -203,6 +242,12 @@ class Ticket extends Controller
                 'data'      => ''
             ];
         }
+
+    }
+
+    //退票
+    public function refundTicket()
+    {
 
     }
 }

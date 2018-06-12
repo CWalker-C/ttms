@@ -12,6 +12,5 @@ use think\Validate;
 class FindMovie extends Validate
 {
     protected $rule = [
-        'option'    => 'require|number'
     ];
 }

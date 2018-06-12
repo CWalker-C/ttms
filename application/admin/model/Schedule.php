@@ -72,7 +72,8 @@ class Schedule extends Model
         }
         $adminor = new Schedule;
         if ($adminor->allowField(true)->save($data)) {  //添加安排记录成功
-            return $data;
+            $scheId = Db::name('schedule')->getLastInsID();
+            return array_merge($data, ['sche_id' => $scheId]);
         } else {
             return -4;
         }
@@ -113,6 +114,7 @@ class Schedule extends Model
             $movieEndTime = strtotime($res[$i]['schedule_begin_time']) + $movieInfo[0]['movie_duration'];
             $movieSchedInfo[$k++] = [
                 'movie_name'        => $movieName,
+                'schedule_price'    => $res[$i]['schedule_price'],
                 'movie_begin_time'  => $movieBeginTime,
                 'movie_end_time'    => $movieEndTime,
                 'hall_name'         => $data['hall_name']
@@ -160,6 +162,7 @@ class Schedule extends Model
         $res = Db::table('schedule')
             ->field('schedule_begin_time')
             ->where('hall_id', $data['hall_id'])
+            ->where('schedule_id', '<>', $scheInfo['schedule_id'])
             ->select();
 
 //        var_dump($res);
@@ -177,8 +180,11 @@ class Schedule extends Model
                 }
             }
         }
+
         $adminor = new Schedule;
-        if ($adminor->allowField(true)->where('schedule_id', $scheId)->update($data)) {  //添加安排记录成功
+
+        if ($adminor->allowField(true)->where('schedule_id', $scheId)->update($data) == 0) {  //添加安排记录成功
+            $data = array_merge($data, ['schedule_id'   => Db::name('schedule')->getLastInsID()]);
             return $data;
         } else {
             return -4;

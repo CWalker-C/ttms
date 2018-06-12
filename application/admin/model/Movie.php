@@ -44,11 +44,10 @@ class Movie extends Model
     }
 
     //查询影片
-    public function findMovie($data)
+    public function findMovie()
     {
-        $option = $data['option'];
         $res = Db::table('movie_info')
-            ->where('is_active', $option)
+            ->where('is_active', '<>', -3)
             ->select();
 
         return $res;
@@ -59,6 +58,7 @@ class Movie extends Model
     {
         $res = Db::table('movie_info')
             ->where('movie_id', $data['movie_id'])
+            ->where('is_active', '<>', -3)
             ->select();
 
         if (!$res) {
@@ -68,12 +68,12 @@ class Movie extends Model
             return -1;
         }
 
-        $movieModel = new Movie();
-        $res = $movieModel->where('movie_id', $data['movie_id'])
+//        $movieModel = new Movie();
+        $res = Db::table('movie_info')
+            ->where('movie_id', $data['movie_id'])
             ->update($data);
-        if ($res == 0){
-            return $data;
-        }
+
+        return $data;
     }
 
     //删除电影信息

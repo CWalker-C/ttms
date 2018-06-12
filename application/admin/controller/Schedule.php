@@ -191,6 +191,7 @@ class Schedule extends Controller
             $admin = new ScheModel();
             $res = $admin->modifySchedule($data);
 
+
             if (is_array($res)) {
                 return [
                     'status' => 0,
@@ -219,8 +220,7 @@ class Schedule extends Controller
                     'msg' => 'the time you arrange is contradictory',
                     'data' => ''
                 ];
-            }
-            if ($res == -3) {
+            } else {
                 return [
                     'status' => 1,
                     'msg' => 'the server is busy now',

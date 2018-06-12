@@ -28,6 +28,33 @@ class Ticket extends Model
 
     }
 
+    //查询电影的演出计划
+    public function findMovieSche($data)
+    {
+        $movieId = $data['movie_id'];
+        $movieInfo = Db::table('movie_info')
+            ->where('movie_id', $movieId)
+            ->where('is_active', '<>', -3)
+            ->select();
+        if (!$movieInfo) {  //没有该电影
+            return -1;
+        }
+        $movieDur = $movieInfo[0]['movie_duration'];
+        $res = Db::table('schedule')
+            ->where('movie_id', 1)
+            ->where('is_active', 1)
+            ->select();
+
+        for ($i = 0; $i < count($res); ++$i) {
+            $endTime = date('Y-m-d H:i:s',strtotime([$i]['schedule_begin_time']) + $movieDur * 60);
+            $res[$i] = array_merge($res[$i], ['schedule_end_time' => $endTime]);
+        }
+
+        return $res;
+    }
+
+
+
     //查询票务状况
     public function findTicket($data) {
         $movieName = $data['movie_name'];
@@ -212,4 +239,11 @@ class Ticket extends Model
         return array_merge($dataInsert, ['order_id' => $orderId]);
 
     }
+
+    //退票
+    public function refundTicket($data)
+    {
+
+    }
+
 }

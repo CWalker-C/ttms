@@ -108,7 +108,7 @@ class Movie extends Controller
         }
         $data = input('post.');
         $user = new MovieModel();
-        $res = $user->findMovie($data);
+        $res = $user->findMovie();
         if (is_array($res)) {
             return [
                 'status' => 0,
@@ -132,8 +132,8 @@ class Movie extends Controller
         header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
 
         if (request()->isPost()) {
-            $user = new User;
-            $res = $user->isInLogin();
+//            $user = new User;
+//            $res = $user->isInLogin();
             /*if ($res == 0) {
 
                 //用户没有登录
@@ -151,8 +151,9 @@ class Movie extends Controller
                 ];
             }*/
 
+            $data = input('post.');
             $validate = validate('add_movie');
-            if (!$validate->check(input('post.'))) {
+            if (!$validate->check($data)) {
                 return [
                     'status' => 1,
                     'msg' => 'the data you input is not legal',
@@ -160,11 +161,8 @@ class Movie extends Controller
                 ];
             }
 
-            $data = input('post.');
-
             $admin = new MovieModel();
             $res = $admin->modifyMovie($data);
-
 
             if (is_array($res)) {
                 return [
