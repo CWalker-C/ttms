@@ -53,7 +53,7 @@ class Ticket extends Controller
         }
     }
 
-    //查询是否有票
+    //查询演出座位售出情况
     public function findTicket()
     {
         header('Access-Control-Allow-Origin: *');

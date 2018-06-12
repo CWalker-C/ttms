@@ -57,24 +57,20 @@ class Ticket extends Model
 
     //查询票务状况
     public function findTicket($data) {
-        $movieName = $data['movie_name'];
-        $beginTime = $data['schedule_begin_time'];
-        $movieInfo = Db::table('movie_info')
-            ->where('movie_name', $movieName)
-            ->select();
-        if (!$movieInfo) {  //电影未上映
-            return -1;
-        }
-        $movieId = $movieInfo[0]['movie_id'];
         $scheInfo = Db::table('schedule')
-            ->where('schedule_begin_time', date('Y-m-d H:i:s', $beginTime))
-            ->where('movie_id', $movieId)
+            ->where('schedule_id', $data['schedule_id'])
+            ->where('is_active', 1)
             ->select();
 
- //       var_dump($scheInfo);
+//        var_dump($scheInfo);
         if (!$scheInfo) {   //电影未加入演出计划
             return -2;
         }
+
+        //处理时间戳过期的订单
+        $orderInfo = Db::table('order')
+            ->where('schedule_id', $)
+
         $scheId = $scheInfo[0]['schedule_id'];
         $seatInfo = Db::table('order')
             ->where('schedule_id', $scheId)

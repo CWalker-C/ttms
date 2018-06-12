@@ -13,7 +13,6 @@ use think\Validate;
 class FindTicket extends Validate
 {
     protected $rule = [
-        'movie_name' => 'require',
-        'schedule_begin_time'   => 'require|number'
+        'schedule_id'   => 'require|number'
     ];
 }

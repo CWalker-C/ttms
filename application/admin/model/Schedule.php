@@ -184,8 +184,13 @@ class Schedule extends Model
         $adminor = new Schedule;
 
         if ($adminor->allowField(true)->where('schedule_id', $scheId)->update($data) == 0) {  //添加安排记录成功
-            $data = array_merge($data, ['schedule_id'   => Db::name('schedule')->getLastInsID()]);
-            return $data;
+            return [
+                'movie_name'    => $movieInfo['movie_name'],
+                'hall_name'     => $hallInfo['hall_name'],
+                'schedule_id'           => $scheInfo['schedule_id'],
+                'schedule_begin_time'   => date("Y-m-d H:i:s", $scheInfo['schedule_begin_time']),
+                'schedule_end_time'     => date("Y-m-d H:i:s", $endTimeSchStamp)
+            ];
         } else {
             return -4;
         }
