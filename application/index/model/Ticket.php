@@ -46,7 +46,7 @@ class Ticket extends Model
             ->select();
 
         for ($i = 0; $i < count($res); ++$i) {
-            $endTime = date('Y-m-d H:i:s',strtotime([$i]['schedule_begin_time']) + $movieDur * 60);
+            $endTime = date('Y-m-d H:i:s',strtotime($res[$i]['schedule_begin_time']) + $movieDur * 60);
             $res[$i] = array_merge($res[$i], ['schedule_end_time' => $endTime]);
         }
 
