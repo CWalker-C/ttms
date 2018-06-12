@@ -13,6 +13,7 @@ use think\Validate;
 class FindHallScheTime extends Validate
 {
     protected $rule = [
-        'hall_id' => 'require|number'
+        'hall_name' => 'require',
+        'date_time' => 'require'
     ];
 }

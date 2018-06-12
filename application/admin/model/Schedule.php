@@ -22,8 +22,6 @@ class Schedule extends Model
     //添加演出安排
     public function addSchedule($data)
     {
-        //        var_dump($data);
-
         $beginTimeSchStamp = $data['schedule_begin_time'];
         $movieName = $data['movie_name'];
         $hallName = $data['hall_name'];
@@ -49,6 +47,7 @@ class Schedule extends Model
         $data += ['hall_id' => $hall_id];
         $data += ['movie_id' => $movieId];
         $data['schedule_begin_time'] = date("Y-m-d H:i:s", $data['schedule_begin_time']);
+        $data['is_active']  = 1;
 
         $res = Db::table('schedule')
             ->field('schedule_begin_time')
@@ -111,7 +110,7 @@ class Schedule extends Model
                 ->select();
             $movieName = $movieInfo[0]['movie_name'];
             $movieBeginTime = strtotime($res[$i]['schedule_begin_time']);
-            $movieEndTime = strtotime($res[$i]['schedule_begin_time']) + $movieInfo[0]['movie_duration'];
+            $movieEndTime = strtotime($res[$i]['schedule_begin_time']) + $movieInfo[0]['movie_duration'] * 60;
             $movieSchedInfo[$k++] = [
                 'movie_name'        => $movieName,
                 'schedule_price'    => $res[$i]['schedule_price'],

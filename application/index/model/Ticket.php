@@ -131,7 +131,7 @@ class Ticket extends Model
 
         //查询此顾客已购票数
         $ticCnt = Db::table('order')
-            ->where('customer_id', $this->cusInfo['customer_id'])
+            ->where('customer_id', /*$this->cusInfo['customer_id']*/1)
             ->where('schedule_id', $this->scheInfo[0]['schedule_id'])
             ->count();
         if ($ticCnt > 5) {   //该顾客购票数已达上限（6张）
@@ -166,7 +166,7 @@ class Ticket extends Model
             }
         }
         $dataInsert = [
-            'customer_id'   => $data['customer_id'],
+            'customer_id'   => /*$this->cusInfo['customer_id']*/1,
             'schedule_id'=> $this->scheInfo[0]['schedule_id'],
             'order_discount_price'=> $disPrice,
             'order_date'    => date('Y-m-d H:i:s', time()),
@@ -176,7 +176,7 @@ class Ticket extends Model
         ];
         $orderId = Db::name('order')->insertGetId($dataInsert);
         $dataInsert2 = [
-            'customer_name' => $this->cusInfo['customer_name'],
+            'customer_name' => /*$this->cusInfo['customer_name']*/1,
             'movie_name'    => $this->movieInfo[0]['movie_name'],
             'hall_name'     => $this->hallInfo[0]['hall_name'],
             'order_id'      => $orderId
@@ -187,41 +187,37 @@ class Ticket extends Model
     //购票
     public function buyTicket($data)
     {
-        if (!$data['is_paid'] != 1) {    //未付款
+        if ($data['is_paid'] != 1) {
             return -1;
         }
         $orderInfo = Db::table('order')
             ->where('order_id', $data['order_id'])
             ->where('is_active', 0)
             ->select();
-        if ($orderInfo) {
+        if (!$orderInfo) {
             return -2;
         }
+//        var_dump($orderInfo);
         if (time() - strtotime($orderInfo[0]['order_date']) > 900) {    //订单超时
             return -3;
         }
-        Db::table('order')
-            ->where('order_id', $data['order_id'])
-            ->where('is_active', 0)
-            ->update(['is_active' => 1]);
-
-        $this->scheInfo['schedule_id'] = $data['schedule_id'];
-        $this->seatRow = $data['seat_row'];
-        $this->seatCol = $data['seat_col'];
+        $this->scheInfo['schedule_id'] = $orderInfo[0]['schedule_id'];
+        $this->seatRow = $orderInfo[0]['seat_row'];
+        $this->seatCol = $orderInfo[0]['seat_col'];
         $this->cusInfo = session('user'); //顾客信息
         $this->scheInfo = Db::table('schedule')
             ->where('schedule_id', $this->scheInfo['schedule_id'])
             ->where('is_active', 1)
             ->select();
         if (!$this->scheInfo) {   //电影未安排演出计划
-            return -2;
+            return -4;
         }
 
         $this->movieInfo = Db::table('movie_info')
             ->where('movie_id', $this->scheInfo[0]['movie_id'])
             ->select();
         if (!$this->movieInfo) {  //电影已下架
-            return -1;
+            return -4;
         }
 //        var_dump($this->movieInfo);
         $disPrice = $this->scheInfo[0]['schedule_price'] * (1 - $this->cusInfo['class_id'] * 0.5);
@@ -229,8 +225,13 @@ class Ticket extends Model
         $this->hallInfo = Db::table('hall')
             ->where('hall_id', $this->scheInfo[0]['hall_id'])
             ->select();
+        Db::table('order')
+            ->where('order_id', $data['order_id'])
+            ->where('is_active', 0)
+            ->update(['is_active' => 1]);
+
         return [
-            'customer_id'   => $data['customer_id'],
+            'customer_id'   => /*$this->cusInfo['customer_id']*/1,
             'schedule_id'=> $this->scheInfo[0]['schedule_id'],
             'order_discount_price'=> $disPrice,
             'order_date'    => date('Y-m-d H:i:s', time()),
@@ -252,6 +253,17 @@ class Ticket extends Model
         ->update(['is_active' => -1]);
 
         return 0;
+    }
+
+    //用户查询自己的订单
+    public function findUserTicket($data)
+    {
+        $customerId = $data['customer_id'];
+        $res = Db::table('order')
+            ->where('customer_id', $customerId)
+            ->select();
+
+        return $res;
     }
 
 }

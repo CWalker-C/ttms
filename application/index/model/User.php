@@ -105,6 +105,19 @@ class User extends Model
         }
     }
 
+    //用户修改个人信息
+    public function modifyInfo($data)
+    {
+        $res = Db::table('customer')
+            ->where('customer_id', $data['customer_id'])
+            ->update([
+                'customer_name'     => $data['customer_name'],
+                'customer_passwd'   => $data['customer_passwd'],
+                'customer_mobile'   => $data['customer_mobile']
+            ]);
+        return $data;
+    }
+
 
     public function createCheckCode() {
         /*--创建一个大小为 100*30 的验证码--*/

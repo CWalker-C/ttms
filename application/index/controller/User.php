@@ -159,6 +159,53 @@ class User extends Controller
         }
     }
 
+    //用户修改个人信息
+    public function modifyInfo()
+    {
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
+
+        $user = new User();
+        $res = $user->isInLogin();
+        /*if ($res == 0) {
+
+            //用户没有登录
+            return [
+                'status'    => 1,
+                'msg'       => 'the user didn\'t log in',
+                'data'      => ''
+            ];
+        }*/
+
+        /*$validate = validate('find_user_ticket');
+        if (!$validate->check(input('post.'))) {
+            return [
+                'status'    => 1,
+                'msg'       => 'the data you input is not legal',
+                'data'      => ''
+            ];
+        }*/
+
+        $data = input('post.');
+        $user = new UserModel();
+        $res = $user->modifyInfo($data);
+        if ($res == 0) {
+            return [
+                'status'    => 0,
+                'msg'       => '',
+                'data'      => $res
+            ];
+        } else {
+            return [
+                'status'    => 0,
+                'msg'       => 'the server is busy now',
+                'data'      => ''
+            ];
+        }
+
+    }
+
     //验证码
     public function checkCode() {
         $verifyImage = new \VerifyImage();

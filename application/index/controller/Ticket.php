@@ -80,13 +80,6 @@ class Ticket extends Controller
                 'data'      => $res
             ];
         }
-        if ($res == -1) {
-            return [
-                'status'    => 1,
-                'msg'       => 'the film is not shown',
-                'data'      => ''
-            ];
-        }
         if ($res == -2) {
             return [
                 'status'    => 1,
@@ -200,7 +193,7 @@ class Ticket extends Controller
         if (!$validate->check(input('post.'))) {
             return [
                 'status'    => 1,
-                'msg'       => $validate->getError(),
+                'msg'       => 'the data you input is not legal',
                 'data'      => ''
             ];
         }
@@ -215,24 +208,31 @@ class Ticket extends Controller
                 'data'      => $res
             ];
         }
-        if ($res = -1) {
+        if ($res == -1) {
             return [
                 'status'    => 1,
-                'msg'       => '',
-                'data'      => ''
-            ];
-        }
-        if ($res = -1) {
-            return [
-                'status'    => 1,
-                'msg'       => 'not buying ticket according to the normal process',
+                'msg'       => 'no payment',
                 'data'      => ''
             ];
         }
         if ($res == -2) {
             return [
                 'status'    => 1,
+                'msg'       => 'no order information',
+                'data'      => ''
+            ];
+        }
+        if ($res == -3) {
+            return [
+                'status'    => 1,
                 'msg'       => 'buying ticket overtime',
+                'data'      => ''
+            ];
+        }
+        if ($res == -4) {
+            return [
+                'status'    => 1,
+                'msg'       => 'the film is not shown',
                 'data'      => ''
             ];
         } else {
@@ -248,6 +248,92 @@ class Ticket extends Controller
     //退票
     public function refundTicket()
     {
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
+
+        $user = new User();
+        $res = $user->isInLogin();
+        /*if ($res == 0) {
+
+            //用户没有登录
+            return [
+                'status'    => 1,
+                'msg'       => 'the user didn\'t log in',
+                'data'      => ''
+            ];
+        }*/
+
+        $validate = validate('refund_ticket');
+        if (!$validate->check(input('post.'))) {
+            return [
+                'status'    => 1,
+                'msg'       => 'the data you input is not legal',
+                'data'      => ''
+            ];
+        }
+        $data = input('post.');
+        $user = new TicketModel();
+        $res = $user->refundTicket($data);
+        if ($res == 0) {
+            return [
+                'status'    => 0,
+                'msg'       => '',
+                'data'      => ''
+            ];
+        } else {
+            return [
+                'status'    => 1,
+                'msg'       => 'the server is busy now',
+                'data'      => ''
+            ];
+        }
+    }
+
+    //用户查询自己的订单(未过期)
+    public function findUserTicket()
+    {
+
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
+
+        $user = new User();
+        $res = $user->isInLogin();
+        /*if ($res == 0) {
+
+            //用户没有登录
+            return [
+                'status'    => 1,
+                'msg'       => 'the user didn\'t log in',
+                'data'      => ''
+            ];
+        }*/
+
+        /*$validate = validate('find_user_ticket');
+        if (!$validate->check(input('post.'))) {
+            return [
+                'status'    => 1,
+                'msg'       => 'the data you input is not legal',
+                'data'      => ''
+            ];
+        }*/
+        $data = input('post.');
+        $user = new TicketModel();
+        $res = $user->findUserTicket($data);
+        if (is_array($res)) {
+            return [
+                'status'    => 0,
+                'msg'       => '',
+                'data'      => $res
+            ];
+        } else {
+            return [
+                'status'    => 1,
+                'msg'       => 'the server is busy now',
+                'data'      => ''
+            ];
+        }
 
     }
 }

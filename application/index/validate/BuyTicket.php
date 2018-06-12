@@ -13,11 +13,7 @@ use think\Validate;
 class BuyTicket extends Validate
 {
     protected $rule = [
-        'movie_name'            => 'require',
-        'customer_email'        => 'require|email',
-        'schedule_begin_time'   => 'require|number',
-        'seat_row'              => 'require|number',
-        'seat_col'              => 'require|number',
-        'is_paid'               => 'require|eq:1'
+        'order_id'            => 'require|number',
+        'is_paid'             => 'require|number'
     ];
 }
