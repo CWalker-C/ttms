@@ -96,7 +96,7 @@ class Schedule extends Controller
         }
     }
 
-    //查询已安排的电影时间段
+    //查询已安排的电影时间段(当天)
     public function findHallScheTime()
     {
         header('Access-Control-Allow-Origin: *');

@@ -79,13 +79,13 @@ class Schedule extends Model
         }
     }
 
-    //查询已安排的电影时间段
+    //查询已安排的电影时间段(当天)
     public function findHallScheTime($data)
     {
-        $hall_name = $data['hall_name'];
+        $hallId = $data['hall_id'];
         $dateTimeStamp = $data['date_time'];
         $res = Db::table('hall')
-            ->where('hall_name', $hall_name)
+            ->where('hall_id', $hallId)
             ->select();
 
         //演出厅不存在
@@ -220,8 +220,32 @@ class Schedule extends Model
             ->whereTime('schedule_begin_time','>=', 'today')
             ->where('is_active', 1)
             ->select();
+        $data = array();
+        $k = 0;
+        for ($i = 0; $i < count($res); ++$i) {
+            $scheId = $res[$i]['schedule_id'];
+            $movieId = $res[$i]['movie_id'];
+            $hallId = $res[$i]['hall_id'];
+            $movieInfo = Db::table('movie_info')
+                ->where('movie_id', $movieId)
+                ->select();
+            $hallInfo = Db::table('hall')
+                ->where('hall_id', $hallId)
+                ->select();
+//            var_dump($movieInfo);
+//            var_dump($hallInfo);
+            $data[$k++] = [
+                'schedule_id'   => $scheId,
+                'movie_name'    => $movieInfo[0]['movie_name'],
+                'hall_name'     => $hallInfo[0]['hall_name'],
+                'schedule_begin_time'   => $res[$i]['schedule_begin_time'],
+                'schedule_price'        => $res[$i]['schedule_price'],
+                'schedule_end_time'     => date('Y-m-d H:i:s',
+                    strtotime($res[$i]['schedule_begin_time']) + $movieInfo[0]['movie_duration'] * 60)
+            ];
+        }
 
-        return $res;
+        return $data;
     }
 
 }
