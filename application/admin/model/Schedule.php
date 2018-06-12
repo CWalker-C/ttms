@@ -82,10 +82,10 @@ class Schedule extends Model
     //查询已安排的电影时间段(当天)
     public function findHallScheTime($data)
     {
-        $hallId = $data['hall_id'];
+        $hallName = $data['hall_name'];
         $dateTimeStamp = $data['date_time'];
         $res = Db::table('hall')
-            ->where('hall_id', $hallId)
+            ->where('hall_name', $hallName)
             ->select();
 
         //演出厅不存在
