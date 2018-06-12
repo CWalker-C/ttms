@@ -123,7 +123,7 @@ class Ticket extends Controller
                 'data'      => ''
             ];
         }
-        if ($res == -3) {
+        if ($res == 1) {
             return [
                 'status'    => 1,
                 'msg'       => 'the seat has been bought',
@@ -174,6 +174,13 @@ class Ticket extends Controller
                 'status'    => 0,
                 'msg'       => '',
                 'data'      => $res
+            ];
+        }
+        if ($res = -1) {
+            return [
+                'status'    => 1,
+                'msg'       => '',
+                'data'      => ''
             ];
         }
         if ($res = -1) {
