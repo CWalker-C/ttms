@@ -44,6 +44,7 @@ class Ticket extends Model
         $res = Db::table('schedule')
             ->where('movie_id', 1)
             ->where('is_active', 1)
+            ->order('schedule_begin_time')
             ->select();
         if (!$res) {
             return -2;
@@ -55,10 +56,19 @@ class Ticket extends Model
                 ->where('hall_id', $res[$i]['hall_id'])
                 ->where('is_active', 1)
                 ->select();
-
+            $orderInfo = Db::table('order')
+                ->where('schedule_id', $res[$i]['schedule_id'])
+                ->where('is_active', 1)
+                ->select();
+            $seatInfo = Db::table('seat')
+                ->where('hall_id', $res[$i]['hall_id'])
+                ->where('seat_is_active', 1)
+                ->select();
+            $restSeatCnt = $hallInfo[0]['seat_rows'] * $hallInfo[0]['seat_cols'] - count($orderInfo) - count($seatInfo);
             $res[$i] = array_merge($res[$i], [
                 'movie_name'            => $movieInfo[0]['movie_name'],
                 'hall_name'             => $hallInfo[0]['hall_name'],
+                'rest_seat_cnt'         => $restSeatCnt,
                 'schedule_end_time'     => $endTime
             ]);
         }
@@ -77,6 +87,22 @@ class Ticket extends Model
 //        var_dump($scheInfo);
         if (!$scheInfo) {   //电影未加入演出计划
             return -2;
+        }
+        $hallInfo = Db::table('hall')
+            ->where('hall_id', $scheInfo[0]['hall_id'])
+            ->select();
+        $hallRows = $hallInfo[0]['seat_rows'];
+        $hallCols = $hallInfo[0]['seat_cols'];
+
+        $unavailSeatInfo = Db::table('seat')
+            ->where('hall_id', $scheInfo[0]['hall_id'])
+            ->where('seat_is_active', 1)
+            ->select();
+
+//        var_dump($seatInfo);
+        $unavailSeat = array();
+        for ($i = 0; $i < count($unavailSeatInfo); ++$i) {
+            $unavailSeat[$i] = ['row' => $unavailSeatInfo[$i]['seat_row'], 'col' => $unavailSeatInfo[$i]['seat_col']];
         }
 
         //处理时间戳过期的订单
@@ -102,8 +128,14 @@ class Ticket extends Model
         for ($i = 0; $i < count($seatInfo); ++$i) {
              $seatSold[$i] = ['row' => $seatInfo[$i]['seat_row'], 'col' => $seatInfo[$i]['seat_col']];
         }
-
-        return $seatSold;
+        $restSeatCnt = $hallRows  * $hallCols - count($unavailSeatInfo) - count($seatInfo);
+        return [
+            'hall_rows'         => $hallRows,
+            'hall_cols'         => $hallCols,
+            'rest_seat_cnt'     => $restSeatCnt,
+            'unavail_seat'      => $unavailSeat,
+            'sold_seat'         => $seatSold
+        ];
     }
 
     //支付中
