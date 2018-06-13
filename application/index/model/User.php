@@ -118,7 +118,6 @@ class User extends Model
         return $data;
     }
 
-
     public function createCheckCode() {
         /*--创建一个大小为 100*30 的验证码--*/
         $image = imagecreatetruecolor(100, 30);

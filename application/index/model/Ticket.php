@@ -35,6 +35,7 @@ class Ticket extends Model
         $movieInfo = Db::table('movie_info')
             ->where('movie_id', $movieId)
             ->where('is_active', '<>', -3)
+            ->where('is_active', '<>', -1)
             ->select();
         if (!$movieInfo) {  //没有该电影
             return -1;
@@ -44,6 +45,9 @@ class Ticket extends Model
             ->where('movie_id', 1)
             ->where('is_active', 1)
             ->select();
+        if (!$res) {
+            return -2;
+        }
 
         for ($i = 0; $i < count($res); ++$i) {
             $endTime = date('Y-m-d H:i:s',strtotime($res[$i]['schedule_begin_time']) + $movieDur * 60);

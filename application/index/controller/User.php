@@ -178,19 +178,19 @@ class User extends Controller
             ];
         }*/
 
-        /*$validate = validate('find_user_ticket');
+        $validate = validate('modify_info');
         if (!$validate->check(input('post.'))) {
             return [
                 'status'    => 1,
                 'msg'       => 'the data you input is not legal',
                 'data'      => ''
             ];
-        }*/
+        }
 
         $data = input('post.');
         $user = new UserModel();
         $res = $user->modifyInfo($data);
-        if ($res == 0) {
+        if (is_array($res)) {
             return [
                 'status'    => 0,
                 'msg'       => '',

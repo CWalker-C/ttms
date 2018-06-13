@@ -44,6 +44,20 @@ class Ticket extends Controller
                 'msg'       => '',
                 'data'      => $res
             ];
+        }
+        if ($res == -1) {
+            return [
+                'status'    => 1,
+                'msg'       => 'the movie has gone',
+                'data'      => ''
+            ];
+        }
+        if ($res == -2) {
+            return [
+                'status'    => 1,
+                'msg'       => 'no plan for the film',
+                'data'      => ''
+            ];
         } else {
             return [
                 'status'    => 1,
