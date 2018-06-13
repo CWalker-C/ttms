@@ -259,7 +259,7 @@ class Ticket extends Model
     public function findUserTicket()
     {
         $customerInfo = session('user');
-        $customerId = $customerInfo['customer_id'];
+        $customerId = /*$customerInfo['customer_id']*/1;
         $res = Db::table('order')
             ->where('customer_id', $customerId)
             ->select();

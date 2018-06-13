@@ -310,15 +310,6 @@ class Ticket extends Controller
             ];
         }*/
 
-        /*$validate = validate('find_user_ticket');
-        if (!$validate->check(input('post.'))) {
-            return [
-                'status'    => 1,
-                'msg'       => 'the data you input is not legal',
-                'data'      => ''
-            ];
-        }*/
-        $data = input('post.');
         $user = new TicketModel();
         $res = $user->findUserTicket();
         if (is_array($res)) {
