@@ -27,14 +27,14 @@ class Ticket extends Controller
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
 
-        /*$validate = validate('find_movie_Sche');
+        $validate = validate('find_movie_Sche');
         if (!$validate->check(input('post.'))) {
             return [
                 'status'    => 1,
                 'msg'       => 'the data you input is not legal',
                 'data'      => ''
             ];
-        }*/
+        }
         $data =  input('post.');
         $user = new TicketModel();
         $res = $user->findMovieSche($data);
@@ -320,7 +320,7 @@ class Ticket extends Controller
         }*/
         $data = input('post.');
         $user = new TicketModel();
-        $res = $user->findUserTicket($data);
+        $res = $user->findUserTicket();
         if (is_array($res)) {
             return [
                 'status'    => 0,

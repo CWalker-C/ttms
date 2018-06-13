@@ -250,18 +250,51 @@ class Ticket extends Model
         $orderId = $data['order_id'];
         $res = Db::table('order')
         ->where('order_id', $orderId)
-        ->update(['is_active' => -1]);
+        ->update(['is_active' => -3]);
 
         return 0;
     }
 
     //用户查询自己的订单
-    public function findUserTicket($data)
+    public function findUserTicket()
     {
-        $customerId = $data['customer_id'];
+        $customerInfo = session('user');
+        $customerId = $customerInfo['customer_id'];
         $res = Db::table('order')
             ->where('customer_id', $customerId)
             ->select();
+
+        for ($i = 0; $i < count($res); ++$i) {
+            if ($res[$i]['is_active'] == 0) {
+                if (time() - strtotime($res[$i]['order_date']) > 900){
+                    Db::table('order')
+                        ->where('order_id', $res[$i]['order_id'])
+                        ->update(['is_active' => -1]);
+                    $res[$i]['is_active'] = -1;
+                }
+            }
+            $scheInfo = Db::table('schedule')
+                ->where('schedule_id', $res[$i]['schedule_id'])
+                ->select();
+
+            $scheId = $scheInfo[0]['schedule_id'];
+            $movieInfo = Db::table('movie_info')
+                ->where('movie_id', $scheId)
+                ->select();
+
+            $hallInfo = Db::table('hall')
+                ->where('hall_id', $scheInfo[0]['hall_id'])
+                ->select();
+            $orderInfo = [
+                'movie_name'            => $movieInfo[0]['movie_name'],
+                'hall_name'             => $hallInfo[0]['hall_name'],
+                'schedule_price'        => $scheInfo[0]['schedule_price'],
+                'schedule_begin_time'   => strtotime($scheInfo[0]['schedule_begin_time']),
+                'schedule_end_time'     => strtotime($scheInfo[0]['schedule_begin_time']) + $movieInfo[0]['movie_duration'] * 60
+            ];
+            $res[$i]['order_date']  = strtotime($res[$i]['order_date']);
+            $res[$i] = array_merge($res[$i], $orderInfo);
+        }
 
         return $res;
     }
