@@ -92,6 +92,9 @@ class Movie extends Model
         Db::table('schedule')
             ->where('movie_id', $data['movie_id'])
             ->update(['is_active' => -3]);
+        Db::table('schedule')
+            ->where('movie_id', $data['movie_id'])
+            ->update(['is_active' => -3]);
 
         return $res;
     }
