@@ -211,7 +211,8 @@ class Ticket extends Controller
                 'data'      => ''
             ];
         }
-        $data = input('post.');
+        $data = input('get.');
+//        var_dump($data);
         $customer = new TicketModel;
 
         $res = $customer->buyTicket($data);
@@ -232,7 +233,7 @@ class Ticket extends Controller
         if ($res == -2) {
             return [
                 'status'    => 1,
-                'msg'       => 'no order information',
+                'msg'       => 'no order for paying',
                 'data'      => ''
             ];
         }

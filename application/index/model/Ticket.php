@@ -245,10 +245,13 @@ class Ticket extends Model
             ->select();
         $this->cusInfo = $cusInfo[0];
         $orderInfo = Db::table('order')
-            ->where('order_num')
+            ->where('order_num', $orderNum)
             ->where('is_active', 0)
             ->select();
-
+        if (!$orderInfo) {
+            return -2;
+        }
+//    var_dump($orderInfo);
         $ticketInfo = array();
         $k = 0;
         for ($i = 0; $i < count($orderInfo); ++$i) {
@@ -294,7 +297,7 @@ class Ticket extends Model
                 'customer_name' => $this->cusInfo['customer_name'],
                 'movie_name'    => $this->movieInfo[0]['movie_name'],
                 'hall_name'     => $this->hallInfo[0]['hall_name'],
-                'order_id'      => $data['order_id']
+                'order_id'      => $data['order_num']
             ];
         }
         return $ticketInfo;
