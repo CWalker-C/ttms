@@ -128,14 +128,14 @@ class Ticket extends Controller
             ];
         }*/
 
-        $validate = validate('in_payment');
+       /* $validate = validate('in_payment');
         if (!$validate->check(input('post.'))) {
             return [
                 'status' => 1,
                 'msg' => 'the data you input is not legal',
                 'data' => ''
             ];
-        }
+        }*/
         $data = input('post.');
 
         $user = new TicketModel();
@@ -324,9 +324,9 @@ class Ticket extends Controller
                 'data'      => ''
             ];
         }*/
-
+        $data = input('post.');
         $user = new TicketModel();
-        $res = $user->findUserTicket();
+        $res = $user->findUserTicket($data);
         if (is_array($res)) {
             return [
                 'status'    => 0,

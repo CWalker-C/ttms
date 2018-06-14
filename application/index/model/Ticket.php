@@ -147,10 +147,11 @@ class Ticket extends Model
         $this->scheInfo['schedule_id'] = $data['schedule_id'];
         $customerId = $data['customer_id'];
         $seatInfo = $data['seat_info'];
-//        $this->cusInfo = session('user'); //顾客信息
+//        $seatInfo = [[0,3]];
         $cusInfo = Db::table('customer')
             ->where('customer_id', $customerId)
             ->select();
+
         $this->cusInfo = $cusInfo[0];
         $this->scheInfo = Db::table('schedule')
             ->where('schedule_id', $this->scheInfo['schedule_id'])
@@ -174,14 +175,14 @@ class Ticket extends Model
 
         //查询此顾客已购票数
         $ticCnt = Db::table('order')
-            ->where('customer_id', /*$this->cusInfo['customer_id']*/1)
+            ->where('customer_id', $this->cusInfo['customer_id'])
             ->where('schedule_id', $this->scheInfo[0]['schedule_id'])
             ->count();
         if ($ticCnt + count($seatInfo) > 5) {   //该顾客购票数已达上限（6张）
             return 2;
         }
 
-        $disPrice = $this->scheInfo[0]['schedule_price'] * (1 - $this->cusInfo['class_id'] * 0.5);
+        $disPrice = $this->scheInfo[0]['schedule_price'] * (1 - $this->cusInfo['class_num'] * 0.5);
 
 //        var_dump($disPrice);
         $ticketInfo = array();
@@ -220,6 +221,7 @@ class Ticket extends Model
                 'order_num'     => time() + $this->cusInfo['customer_id']
             ];
             $orderId = Db::name('order')->insertGetId($dataInsert);
+            $dataInsert['order_date'] = time();
             $dataInsert2 = [
                 'customer_name' => /*$this->cusInfo['customer_name']*/1,
                 'movie_name'    => $this->movieInfo[0]['movie_name'],
@@ -315,10 +317,10 @@ class Ticket extends Model
     }
 
     //用户查询自己的订单
-    public function findUserTicket()
+    public function findUserTicket($data)
     {
-        $customerInfo = session('user');
-        $customerId = /*$customerInfo['customer_id']*/1;
+//        $customerInfo = session('user');
+        $customerId = $data['customer_id'];
         $res = Db::table('order')
             ->where('customer_id', $customerId)
             ->select();
