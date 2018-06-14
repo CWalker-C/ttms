@@ -13,7 +13,7 @@ use think\Validate;
 class BuyTicket extends Validate
 {
     protected $rule = [
-        'order_id'            => 'require|number',
+        'order_id'            => 'require',
         'is_paid'             => 'require|number'
     ];
 }

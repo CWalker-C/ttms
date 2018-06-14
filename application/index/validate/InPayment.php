@@ -14,7 +14,5 @@ class InPayment extends Validate
 {
     protected $rule = [
         'schedule_id'           => 'require|number',
-        'seat_row'              => 'require|number',
-        'seat_col'              => 'require|number'
     ];
 }

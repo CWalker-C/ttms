@@ -122,7 +122,8 @@ class Ticket extends Model
         //查询已购票的信息
         $seatInfo = Db::table('order')
             ->where('schedule_id', $scheId)
-            ->where('is_active', '1')
+            ->where('is_active', '<>', -1)
+            ->where('is_active', '<>', -3)
             ->order('order_date')
             ->select();
 //        var_dump($seatInfo);
@@ -144,8 +145,13 @@ class Ticket extends Model
     public function inPayment($data)
     {
         $this->scheInfo['schedule_id'] = $data['schedule_id'];
+        $customerId = $data['customer_id'];
         $seatInfo = $data['seat_info'];
-        $this->cusInfo = session('user'); //顾客信息
+//        $this->cusInfo = session('user'); //顾客信息
+        $cusInfo = Db::table('customer')
+            ->where('customer_id', $customerId)
+            ->select();
+        $this->cusInfo = $cusInfo[0];
         $this->scheInfo = Db::table('schedule')
             ->where('schedule_id', $this->scheInfo['schedule_id'])
             ->where('is_active', 1)

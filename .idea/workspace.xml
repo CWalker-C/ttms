@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="27d77bb7-d6cb-49ae-8e29-f88ab8d692f2" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application/index/model/Ticket.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/index/model/Ticket.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/接口文档.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/接口文档.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/index/validate/BuyTicket.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/index/validate/BuyTicket.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/index/validate/InPayment.php" beforeDir="false" afterPath="$PROJECT_DIR$/application/index/validate/InPayment.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/thinkphp" beforeDir="false" afterPath="$PROJECT_DIR$/thinkphp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -30,26 +32,8 @@
       <file leaf-file-name="Ticket.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/application/index/model/Ticket.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="457">
-              <caret line="290" column="14" lean-forward="true" selection-start-line="290" selection-start-column="14" selection-end-line="290" selection-end-column="14" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Schedule.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/admin/controller/Schedule.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6578">
-              <caret line="306" column="25" lean-forward="true" selection-start-line="306" selection-start-column="22" selection-end-line="306" selection-end-column="30" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Schedule.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/admin/model/Schedule.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4664">
-              <caret line="218" column="60" lean-forward="true" selection-start-line="218" selection-start-column="12" selection-end-line="218" selection-end-column="60" />
+            <state relative-caret-position="413">
+              <caret line="153" column="35" selection-start-line="153" selection-start-column="35" selection-end-line="153" selection-end-column="35" />
             </state>
           </provider>
         </entry>
@@ -251,10 +235,8 @@
         <option value="$PROJECT_DIR$/application/index/validate/findMovieSche.php" />
         <option value="$PROJECT_DIR$/application/index/validate/FindMovieSche.php" />
         <option value="$PROJECT_DIR$/application/index/validate/FindTicket.php" />
-        <option value="$PROJECT_DIR$/application/index/validate/InPayment.php" />
         <option value="$PROJECT_DIR$/application/admin/controller/Schedule.php" />
         <option value="$PROJECT_DIR$/application/admin/validate/FindHallScheTime.php" />
-        <option value="$PROJECT_DIR$/application/index/validate/BuyTicket.php" />
         <option value="$PROJECT_DIR$/application/index/validate/RefundTicket.php" />
         <option value="$PROJECT_DIR$/application/admin/controller/Ticket.php" />
         <option value="$PROJECT_DIR$/application/admin/model/Ticket.php" />
@@ -267,6 +249,8 @@
         <option value="$PROJECT_DIR$/../index.html" />
         <option value="$PROJECT_DIR$/application/admin/model/Movie.php" />
         <option value="$PROJECT_DIR$/application/admin/model/Schedule.php" />
+        <option value="$PROJECT_DIR$/application/index/validate/InPayment.php" />
+        <option value="$PROJECT_DIR$/application/index/validate/BuyTicket.php" />
         <option value="$PROJECT_DIR$/application/index/model/Ticket.php" />
       </list>
     </option>
@@ -326,6 +310,13 @@
               <item name="application" type="462c0819:PsiDirectoryNode" />
               <item name="index" type="462c0819:PsiDirectoryNode" />
               <item name="model" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ttms" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ttms" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+              <item name="index" type="462c0819:PsiDirectoryNode" />
+              <item name="validate" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -405,15 +396,17 @@
       <workItem from="1528817425699" duration="4468000" />
       <workItem from="1528848353618" duration="17044000" />
       <workItem from="1528893750315" duration="3296000" />
-      <workItem from="1528905268259" duration="2069000" />
+      <workItem from="1528905268259" duration="2669000" />
+      <workItem from="1528931254522" duration="639000" />
+      <workItem from="1528934450225" duration="3081000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="231400000" />
+    <option name="totallyTimeSpent" value="235720000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1920" y="0" width="1440" height="900" extended-state="6" />
+    <frame x="1920" y="0" width="1920" height="1080" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.15416667" />
@@ -631,20 +624,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="242">
           <caret line="16" column="1" lean-forward="true" selection-start-line="16" selection-start-column="1" selection-end-line="16" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/index/validate/BuyTicket.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="18" column="1" lean-forward="true" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/index/validate/InPayment.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="19" column="1" lean-forward="true" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="1" />
         </state>
       </provider>
     </entry>
@@ -941,21 +920,35 @@
     <entry file="file://$PROJECT_DIR$/application/admin/controller/Schedule.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="6578">
-          <caret line="306" column="25" lean-forward="true" selection-start-line="306" selection-start-column="22" selection-end-line="306" selection-end-column="30" />
+          <caret line="306" column="25" selection-start-line="306" selection-start-column="22" selection-end-line="306" selection-end-column="30" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/application/admin/model/Schedule.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4664">
-          <caret line="218" column="60" lean-forward="true" selection-start-line="218" selection-start-column="12" selection-end-line="218" selection-end-column="60" />
+          <caret line="218" column="60" selection-start-line="218" selection-start-column="12" selection-end-line="218" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/index/validate/BuyTicket.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="15" column="43" selection-start-line="15" selection-start-column="43" selection-end-line="15" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/index/validate/InPayment.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="15" column="52" selection-start-line="15" selection-start-column="52" selection-end-line="15" selection-end-column="52" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/application/index/model/Ticket.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="457">
-          <caret line="290" column="14" lean-forward="true" selection-start-line="290" selection-start-column="14" selection-end-line="290" selection-end-column="14" />
+        <state relative-caret-position="413">
+          <caret line="153" column="35" selection-start-line="153" selection-start-column="35" selection-end-line="153" selection-end-column="35" />
         </state>
       </provider>
     </entry>
