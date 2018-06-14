@@ -96,7 +96,7 @@ class User extends Model
 //                'expire'    => 3600,
 //                'name'      => $sessionValMd5
 //            ]);
-
+//            $res = array_merge($res, ['customer_id' => ])
             return $res;
         } else if ($res['customer_passwd'] != $customer_passwd) {
             return -1;

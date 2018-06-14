@@ -342,6 +342,7 @@ class Ticket extends Controller
 
     }
 
+    //查找订单的状态
     public function findTicketStat()
     {
         header('Access-Control-Allow-Origin: *');

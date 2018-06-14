@@ -97,6 +97,7 @@ class User extends Controller
                     'status'    => 0,
                     'msg'       => '',
                     'data'      => [
+                        'user_id'   => $res['customer_id'],
                         'user_name' => $res['customer_name'],
                         'user_email'=> $res['customer_email'],
                         'authority' => $res['authority']

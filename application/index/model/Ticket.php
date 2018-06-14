@@ -206,9 +206,7 @@ class Ticket extends Model
                         Db::table('order')
                             ->where('order_id', $orderInfo[0]['order_id'])
                             ->update(['is_active' => -3]);
-
                     }
-
                 }
             }
             $dataInsert = [
