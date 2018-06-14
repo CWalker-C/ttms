@@ -204,7 +204,7 @@ class Ticket extends Controller
         }*/
 
         $validate = validate('buy_ticket');
-        if (!$validate->check(input('post.'))) {
+        if (!$validate->check(input('get.'))) {
             return [
                 'status'    => 1,
                 'msg'       => 'the data you input is not legal',
@@ -340,5 +340,49 @@ class Ticket extends Controller
             ];
         }
 
+    }
+
+    public function findTicketStat()
+    {
+        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+        header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
+
+        $user = new User();
+        $res = $user->isInLogin();
+        /*if ($res == 0) {
+
+            //用户没有登录
+            return [
+                'status'    => 1,
+                'msg'       => 'the user didn\'t log in',
+                'data'      => ''
+            ];
+        }*/
+
+        $validate = validate('find_ticket_stat');
+        if (!$validate->check(input('post.'))) {
+            return [
+                'status'    => 1,
+                'msg'       => 'the data you input is not legal',
+                'data'      => ''
+            ];
+        }
+        $data = input('post.');
+        $user = new TicketModel();
+        $res = $user->findTicketStat($data);
+        if ($res == 0) {
+            return [
+                'status'    => 0,
+                'msg'       => '',
+                'data'      => ''
+            ];
+        } else {
+            return [
+                'status'    => 1,
+                'msg'       => 'the server is busy now',
+                'data'      => ''
+            ];
+        }
     }
 }

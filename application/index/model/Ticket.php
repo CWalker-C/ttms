@@ -212,13 +212,14 @@ class Ticket extends Model
                 }
             }
             $dataInsert = [
-                'customer_id'   => /*$this->cusInfo['customer_id']*/1,
+                'customer_id'   => $this->cusInfo['customer_id'],
                 'schedule_id'=> $this->scheInfo[0]['schedule_id'],
                 'order_discount_price'=> $disPrice,
                 'order_date'    => date('Y-m-d H:i:s', time()),
                 'is_active'     => 0,
                 'seat_row'      => $seatInfo[$i][0],
-                'seat_col'      => $seatInfo[$i][1]
+                'seat_col'      => $seatInfo[$i][1],
+                'order_num'     => time() + $this->cusInfo['customer_id']
             ];
             $orderId = Db::name('order')->insertGetId($dataInsert);
             $dataInsert2 = [
@@ -239,18 +240,20 @@ class Ticket extends Model
         if ($data['is_paid'] != 1) {
             return -1;
         }
-        $orderIds = $data['order_ids'];
+        $customerId = $data['customer_id'];
+        $orderNum = $data['order_num'];
+        $cusInfo = Db::table('customer')
+            ->where('customer_id', $customerId)
+            ->select();
+        $this->cusInfo = $cusInfo[0];
+        $orderInfo = Db::table('order')
+            ->where('order_num')
+            ->where('is_active', 0)
+            ->select();
+
         $ticketInfo = array();
         $k = 0;
-        for ($i = 0; $i < count($orderIds); ++$i) {
-            $orderInfo = Db::table('order')
-                ->where('order_id', $orderIds[$i])
-                ->where('is_active', 0)
-                ->select();
-            if (!$orderInfo) {
-                return -2;
-            }
-//        var_dump($orderInfo);
+        for ($i = 0; $i < count($orderInfo); ++$i) {
             if (time() - strtotime($orderInfo[0]['order_date']) > 900) {    //订单超时
                 return -3;
             }
@@ -279,12 +282,12 @@ class Ticket extends Model
                 ->where('hall_id', $this->scheInfo[0]['hall_id'])
                 ->select();
             Db::table('order')
-                ->where('order_id', $orderIds[$i])
+                ->where('order_num', $orderNum)
                 ->where('is_active', 0)
                 ->update(['is_active' => 1]);
 
             $ticketInfo[$k++] = [
-                'customer_id'   => /*$this->cusInfo['customer_id']*/1,
+                'customer_id'   => $this->cusInfo['customer_id'],
                 'schedule_id'=> $this->scheInfo[0]['schedule_id'],
                 'order_discount_price'=> $disPrice,
                 'order_date'    => date('Y-m-d H:i:s', time()),
@@ -295,8 +298,6 @@ class Ticket extends Model
                 'hall_name'     => $this->hallInfo[0]['hall_name'],
                 'order_id'      => $data['order_id']
             ];
-
-
         }
         return $ticketInfo;
     }
@@ -356,4 +357,13 @@ class Ticket extends Model
         return $res;
     }
 
+    //查询票的状态
+    public function findTicketStat($data)
+    {
+        $orderNum = $data['order_num'];
+        $orderInfo = Db::table('order')
+            ->where('order_num', $orderNum)
+            ->select();
+        return $orderInfo[0]['is__active'];
+    }
 }

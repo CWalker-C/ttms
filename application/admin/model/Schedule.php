@@ -28,54 +28,64 @@ class Schedule extends Model
 
         $movieInfo = Db::table('movie_info')
             ->where('movie_name', $movieName)
+            ->where('is_active', '<>', -3)
             ->find();
         $hallInfo = Db::table('hall')
             ->where('hall_name', $hallName)
             ->find();
 //        var_dump($movieInfo);
-
+//        var_dump($hallInfo);
         if (!$movieInfo) {
             return -1;  //影片没有加入热映列表中
         }
         $hall_id = $hallInfo['hall_id'];
         $movieId = $movieInfo['movie_id'];
         $endTimeSchStamp = $beginTimeSchStamp + $movieInfo['movie_duration'] * 60;
-
+//        var_dump($hall_id);
         if ($beginTimeSchStamp < time()) {   //时间过期
             return -2;
         }
-        $data += ['hall_id' => $hall_id];
-        $data += ['movie_id' => $movieId];
-        $data['schedule_begin_time'] = date("Y-m-d H:i:s", $data['schedule_begin_time']);
-        $data['is_active']  = 1;
+        $dataInsert = [
+            'movie_id'      => $movieId,
+            'hall_id'       => $hall_id,
+            'schedule_price'      => $data['schedule_price'],
+            'schedule_begin_time'   => date('Y-m-d H:i:s', $data['schedule_begin_time'])
+        ];
 
-        $res = Db::table('schedule')
-            ->field('schedule_begin_time')
-            ->where('hall_id', $data['hall_id'])
-            ->select();
+//                var_dump($dataInsert);
 
-//        var_dump($res);
-//        var_dump(count($res));
-        for ($i = 0; $i < count($res); ++$i) {
-            foreach ($res[$i] as $key => $value) {
-                $beginTimeSched = $value;
-                $beginTimeSchedStamp = strtotime($beginTimeSched);
-                $endTimeSchedStamp = strtotime($beginTimeSched) + $movieInfo['movie_duration'] * 60;
+         $res = Db::table('schedule')
+             ->field('schedule_begin_time')
+             ->where('hall_id', $hall_id)
+             ->select();
 
-                //安排时间段冲突
-                if (($beginTimeSchStamp >= $beginTimeSchedStamp && $beginTimeSchStamp <= $endTimeSchedStamp)
-                    || ($endTimeSchStamp >= $beginTimeSchedStamp && $endTimeSchStamp <= $endTimeSchedStamp)) {
-                    return -3;
-                }
-            }
-        }
-        $adminor = new Schedule;
-        if ($adminor->allowField(true)->save($data)) {  //添加安排记录成功
-            $scheId = Db::name('schedule')->getLastInsID();
-            return array_merge($data, ['sche_id' => $scheId]);
-        } else {
-            return -4;
-        }
+ //        var_dump($res);
+ //        var_dump(count($res));
+         for ($i = 0; $i < count($res); ++$i) {
+             foreach ($res[$i] as $key => $value) {
+                 $beginTimeSched = $value;
+                 $beginTimeSchedStamp = strtotime($beginTimeSched);
+                 $endTimeSchedStamp = strtotime($beginTimeSched) + $movieInfo['movie_duration'] * 60;
+
+                 //安排时间段冲突
+                 if (($beginTimeSchStamp >= $beginTimeSchedStamp && $beginTimeSchStamp <= $endTimeSchedStamp)
+                     || ($endTimeSchStamp >= $beginTimeSchedStamp && $endTimeSchStamp <= $endTimeSchedStamp)) {
+                     return -3;
+                 }
+             }
+         }
+ //        var_dump($data);
+         $adminor = new Schedule;
+         if ($adminor->allowField(true)->save($dataInsert)) {  //添加安排记录成功
+             Db::table('movie_info')
+                 ->where('movie_id', $movieId)
+                 ->update(['is_active' => 1]);
+             $scheId = Db::name('schedule')->getLastInsID();
+             $dataInsert['schedule_begin_time'] = $beginTimeSchStamp;
+             return array_merge($data, ['schedule_id' => $scheId]);
+         } else {
+             return -4;
+         }
     }
 
     //查询已安排的电影时间段(当天)
