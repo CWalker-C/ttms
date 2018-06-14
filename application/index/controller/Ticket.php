@@ -371,11 +371,11 @@ class Ticket extends Controller
         $data = input('post.');
         $user = new TicketModel();
         $res = $user->findTicketStat($data);
-        if ($res == 0) {
+        if (is_numeric($res)) {
             return [
                 'status'    => 0,
                 'msg'       => '',
-                'data'      => ''
+                'data'      => $res
             ];
         } else {
             return [

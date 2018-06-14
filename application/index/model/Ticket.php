@@ -364,6 +364,6 @@ class Ticket extends Model
         $orderInfo = Db::table('order')
             ->where('order_num', $orderNum)
             ->select();
-        return $orderInfo[0]['is__active'];
+        return $orderInfo[0]['is_active'];
     }
 }
