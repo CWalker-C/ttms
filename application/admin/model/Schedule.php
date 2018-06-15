@@ -32,11 +32,15 @@ class Schedule extends Model
             ->find();
         $hallInfo = Db::table('hall')
             ->where('hall_name', $hallName)
+            ->where('is_active', 1)
             ->find();
 //        var_dump($movieInfo);
 //        var_dump($hallInfo);
         if (!$movieInfo) {
             return -1;  //影片没有加入热映列表中
+        }
+        if (!$hallInfo) {
+            return -5;
         }
         $hall_id = $hallInfo['hall_id'];
         $movieId = $movieInfo['movie_id'];
@@ -48,6 +52,7 @@ class Schedule extends Model
         $dataInsert = [
             'movie_id'      => $movieId,
             'hall_id'       => $hall_id,
+            'is_active'     => 1,
             'schedule_price'      => $data['schedule_price'],
             'schedule_begin_time'   => date('Y-m-d H:i:s', $data['schedule_begin_time'])
         ];
@@ -190,19 +195,24 @@ class Schedule extends Model
             }
         }
 
-        $adminor = new Schedule;
-
-        if ($adminor->allowField(true)->where('schedule_id', $scheId)->update($data) == 0) {  //添加安排记录成功
+        $dataInsert = [
+            'movie_id'              => $movieId,
+            'hall_id'               => $hall_id,
+            'schedule_price'        => $data['schedule_price'],
+            'schedule_begin_time'   => $data['schedule_begin_time'],
+            'is_active'             => 1
+        ];
+        $res = Db::table('schedule')
+            ->where('schedule_id', $scheId)
+            ->update($dataInsert);
+//        if (!$res) {
             return [
-                'movie_name'    => $movieInfo['movie_name'],
-                'hall_name'     => $hallInfo['hall_name'],
+                'movie_name'            => $movieInfo['movie_name'],
+                'hall_name'             => $hallInfo['hall_name'],
                 'schedule_id'           => $scheInfo['schedule_id'],
-                'schedule_begin_time'   => date("Y-m-d H:i:s", $scheInfo['schedule_begin_time']),
-                'schedule_end_time'     => date("Y-m-d H:i:s", $endTimeSchStamp)
+                'schedule_begin_time'   => $scheInfo['schedule_begin_time'],
+                'schedule_end_time'     => $endTimeSchStamp
             ];
-        } else {
-            return -4;
-        }
     }
 
     //删除演出计划信息
@@ -218,8 +228,11 @@ class Schedule extends Model
 
         $res = Model::where('schedule_id', $data['schedule_id'])
             ->update(['is_active' => -3]);
+        Db::table('order')
+            ->where('schedule_id', $data['schedule_id'])
+            ->update(['is_active' => -4]);
 
-        return $res;
+        return 0;
     }
 
     //查询已安排的演出计划

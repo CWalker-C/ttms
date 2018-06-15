@@ -29,35 +29,27 @@ class Hall extends Model
         if ($res) {
             return 2;
         }
-
+        $data = array_merge($data, ['is_active' => 1]);
         $seatInfo = $data['seat_info'];
         $admin = new Hall();
         $admin->allowField(true)->save($data);
 
-        if (count($seatInfo) > 0) {
-            $seatInfo = str_replace('[', '',$seatInfo);
-            $seatInfo = str_replace(']', '',$seatInfo);
-            $seatInfo = explode(",", $seatInfo);
-            $res = Db::table('hall')
-                ->where('hall_name', $data['hall_name'])
-                ->find();
-            $hallId = $res['hall_id'];
-            for ($i = 0; $i < count($seatInfo); $i++) {
-                $row = $seatInfo[$i][0];
-                $col = $seatInfo[$i][1];
+        $hallId = Db::name('hall')->getLastInsID();
+        for ($i = 0; $i < count($seatInfo); $i++) {
+            $row = $seatInfo[$i][0];
+            $col = $seatInfo[$i][1];
 
-                $seatInsert = [
-                    'hall_id'           => $hallId,
-                    'seat_row'          => $row,
-                    'seat_col'          => $col,
-                    'seat_is_active'    => 1 //不可用
-                ];
+            $seatInsert = [
+                'hall_id'           => $hallId,
+                'seat_row'          => $row,
+                'seat_col'          => $col,
+                'seat_is_active'    => 1 //不可用
+            ];
 
-                Db::table('seat')
-                    ->insert($seatInsert);
-            }
-
+            Db::table('seat')
+                ->insert($seatInsert);
         }
+
         $res = Db::table('hall')
             ->where('hall_name', $data['hall_name'])
             ->find();
@@ -182,8 +174,10 @@ class Hall extends Model
         if (!$res) {
             return -1;
         }
-
         $res = Hall::where('hall_id', $data['hall_id'])
+            ->update(['is_active' => -3]);
+        Db::table('schedule')
+            ->where('hall_id', $data['hall_id'])
             ->update(['is_active' => -3]);
 
 //        var_dump($res);

@@ -24,8 +24,8 @@ class User extends Model
             }
 
             $data['customer_passwd'] = md5($data['customer_passwd']);
-            $data['customer_create_time'] = date("Y-m-d H:i:s",time());
-            $data['customer_update_time'] = date("Y-m-d H:i:s",time());
+            $data['create_time'] = date("Y-m-d H:i:s",time());
+            $data['update_time'] = date("Y-m-d H:i:s",time());
             $data['class_id'] = 0;
             $data['login_cnt'] = 0;
             $data['authority'] = 0;
@@ -33,8 +33,8 @@ class User extends Model
             $user = new User;
 
             if ($user->allowField(true)->save($data)) { //注册成功
-
-                return $data;
+                $customerId = Db::name('customer')->getLastInsID();
+                return array_merge($data, ['customer_id' => $customerId]);
             } else {    //其他错误
 
                 return -1;

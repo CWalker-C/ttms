@@ -86,7 +86,13 @@ class Schedule extends Controller
                     'data' => ''
                 ];
             }
-            if ($res == -3) {
+            if ($res == -5) {
+                return [
+                    'status' => 1,
+                    'msg' => 'the hall can\'t be used',
+                    'data' => ''
+                ];
+            } else {
                 return [
                     'status' => 1,
                     'msg' => 'the server is busy now',
@@ -190,7 +196,6 @@ class Schedule extends Controller
 
             $admin = new ScheModel();
             $res = $admin->modifySchedule($data);
-
 
             if (is_array($res)) {
                 return [

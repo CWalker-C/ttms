@@ -116,27 +116,15 @@ class Ticket extends Controller
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
 
-        /*$user = new User;
-        $res = $user->isInLogin();
-        if ($res == 0) {
-
-            //用户没有登录
-            return [
-                'status'    => 1,
-                'msg'       => 'the user didn\'t log in',
-                'data'      => ''
-            ];
-        }*/
-
-       /* $validate = validate('in_payment');
+        $validate = validate('find_ticket');
         if (!$validate->check(input('post.'))) {
             return [
-                'status' => 1,
-                'msg' => 'the data you input is not legal',
-                'data' => ''
+                'status'    => 1,
+                'msg'       => 'the data you input is not legal',
+                'data'      => ''
             ];
-        }*/
-        $data = input('post.');
+        }
+        $data =  input('post.');
 
         $user = new TicketModel();
         $res = $user->inPayment($data);
@@ -308,23 +296,19 @@ class Ticket extends Controller
     //用户查询自己的订单(未过期)
     public function findUserTicket()
     {
-
         header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
 
-        $user = new User();
-        $res = $user->isInLogin();
-        /*if ($res == 0) {
-
-            //用户没有登录
+        $validate = validate('find_user_ticket');
+        if (!$validate->check(input('post.'))) {
             return [
                 'status'    => 1,
-                'msg'       => 'the user didn\'t log in',
+                'msg'       => 'the data you input is not legal',
                 'data'      => ''
             ];
-        }*/
-        $data = input('post.');
+        }
+        $data =  input('post.');
         $user = new TicketModel();
         $res = $user->findUserTicket($data);
         if (is_array($res)) {
@@ -340,7 +324,6 @@ class Ticket extends Controller
                 'data'      => ''
             ];
         }
-
     }
 
     //查找订单的状态
